@@ -79,7 +79,7 @@ void usart_example_init(void)
     }
     DEBUGOUT("USART power configuration is successful \n");
     // Configure the USART configurations
-    status = sl_si91x_usart_set_configuration(usart_handle, &usart_config, usart_config.baudrate);
+    status = sl_si91x_usart_set_configuration(usart_handle, &usart_config);
     if (status != SL_STATUS_OK) {
       DEBUGOUT("sl_si91x_usart_set_configuration: Error Code : %lu \n", status);
       break;

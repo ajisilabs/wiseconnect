@@ -43,51 +43,49 @@ Before running the application, the user will need the following things to setup
 
 Follow the [Getting Started with Wiseconnect3 SDK](https://docs.silabs.com/wiseconnect/latest/wiseconnect-getting-started/) guide to set up the hardware connections and Simplicity Studio IDE.
 
-## 3. Project Environment
+## 3 Project Environment
 
-1. Ensure the SiWx91x loaded with the latest firmware following the [Upgrade Si91x firmware](https://docs.silabs.com/wiseconnect/latest/wiseconnect-getting-started/getting-started-with-soc-mode#upgrade-si-wx91x-connectivity-firmware)
+- Ensure the SiWx91x loaded with the latest firmware following the [Upgrade Si91x firmware](https://docs.silabs.com/wiseconnect/latest/wiseconnect-getting-started/getting-started-with-soc-mode#upgrade-si-wx91x-connectivity-firmware)
 
-### 3.1 Creating the Project
+- Ensure the latest Gecko SDK along with the extension WiSeConnect3 is added to Simplicity Studio.
 
-#### 3.1.1 SoC Mode
+### 3.1 Creating the project
 
-1. Ensure the SiWx91x setup is connected to your PC.
+#### 3.1.1 SoC mode
+
+- Ensure the SiWx91x set up is connected to your PC.
 
 - In the Simplicity Studio IDE, the SiWx91x SoC board will be detected under **Debug Adapters** pane as shown below.
 
-   ![Soc Board detection](resources/readme/socboarddetection111.png)
-
-- Studio should detect your board. Your board will be shown here. Click on the board detected and go to **EXAMPLE PROJECTS & DEMOS** section.  
-
-- Filter for Bluetooth examples from the Gecko SDK added. For this, check the *Bluetooth* checkbox under **Wireless Technology** and select *BLE - Heart Rate* application.
-
-   ![project_selection](resources/readme/create_project1.png)
-
-- Click 'Create'. The "New Project Wizard" window appears. Click 'Finish'
-
-  ![creation_final](resources/readme/create_project2.png)
+  **![Soc Board detection](resources/readme/socboarddetection111.png)**
 
 #### 3.1.2 NCP mode
 
-1. Ensure the EFx32 and SiWx91x setup is connected to your PC.
+- Ensure the EFx32 and SiWx91x set up is connected to your PC.
 
 - In the Simplicity Studio IDE, the EFR32 board will be detected under **Debug Adapters** pane as shown below.
 
-   ![EFR32 Board detection](resources/readme/efr32.png)
+  **![EFR32 Board detection](resources/readme/efr32.png)**
 
-- Ensure the latest Gecko SDK along with the WiSeConnect 3 extension is added to Simplicity Studio.
+### 3.2 Importing the project
 
-- Go to the 'EXAMPLE PROJECT & DEMOS' tab and select *BLE - Heart Rate* application.
+- Studio should detect your board. Your board will be shown here. Click on the board detected and go to **EXAMPLE PROJECTS & DEMOS** section 
 
-- Click 'Create'. The "New Project Wizard" window appears. Click 'Finish'.
+#### SOC Mode
 
-  ![creation_final](resources/readme/create_project2.png)
-  
-### 3.2 Setup for Application Prints
+- Select **BLE - Heart Rate** test application
 
-#### 3.2.1 SoC Mode
+  **![project_selection](resources/readme/create_project1.png)**
 
-  You can use either of the below USB to UART converters for application prints.
+- Click 'Create'. The "New Project Wizard" window appears. Click 'Finish'
+
+  **![creation_final](resources/readme/create_project2.png)**
+
+### 3.3 Set up for application prints
+
+#### 3.3.1 Teraterm set up - for BRD4325A, BRD4325B, BRD4325C, BRD4325G
+
+You can use either of the below USB to UART converters for application prints.
 
 1. Set up using USB to UART converter board.
 
@@ -96,30 +94,34 @@ Follow the [Getting Started with Wiseconnect3 SDK](https://docs.silabs.com/wisec
 
    **![FTDI_prints](resources/readme/usb_to_uart_1.png)**
 
-2. Setup using USB to UART converter cable.
+2. Set up using USB to UART converter cable.
 
    - Connect RX (Pin 5) of TTL convertor to P27 on WSTK
    - Connect GND (Pin1) of TTL convertor to GND on WSTK
 
    **![FTDI_prints](resources/readme/usb_to_uart_2.png)**
 
-**Tera Term setup - for NCP and SoC modes**
+3. Open the Teraterm tool.
 
-1. Open the Tera Term tool.
+   - For SoC mode, choose the serial port to which USB to UART converter is connected and click on **OK**.
 
-- For SoC mode, choose the serial port to which USB to UART converter is connected and click on **OK**.
+     **![port_selection_soc](resources/readme/port_selection_soc.png)**
 
-   **![UART - SoC](resources/readme/port_selection_soc.png)**
+**Note:** For Other 917 SoC boards please refer section #3.3.2
 
-- For NCP mode, choose the J-Link port and click on **OK**.
+#### 3.3.2 **Teraterm set up - for NCP and SoC modes**
 
-   **![J-link - NCP](resources/readme/port_selection.png)**
+1. Open the Teraterm tool.
+
+- choose the J-Link port and click on **OK**.
+    
+    **![J-link - NCP](resources/readme/port_selection.png)**
 
 2. Navigate to the Setup → Serial port and update the baud rate to **115200** and click on **OK**.
 
-  **![Serial port](resources/readme/serial_port_setup.png)**
+    **![serial_port_setup](resources/readme/serial_port_setup.png)**
 
-  **![Baud rate](resources/readme/serial_port.png)**
+    **![serial_port](resources/readme/serial_port.png)**
 
 ## 4 Application Build Environment
 
@@ -131,7 +133,7 @@ Open `app.c` file and update/modify following macros,
 
 User must update the below parameters
 
-- **GATT\_ROLE** refers the role of the Silicon Labs module to be selected.
+- **GATT_ROLE** refers the role of the Silicon Labs module to be selected.
 
   - If user configures, **SERVER**, Silicon Labs module will act as GATT SERVER, means will add heart rate profile.
 
@@ -180,6 +182,8 @@ User must update the below parameters
 ```
 
 The desired parameters are provided below. User can also modify the parameters as per their needs and requirements
+
+   Opermode command parameters are configured for the application as needed.
 
 - `RSI_BLE_HEART_RATE_UUID` refers to the attribute value of the newly created service.
 
@@ -235,17 +239,6 @@ Open `ble_config.h` file and update/modify following macros,
      #define BLR_DUTY_CYCLING         2
      #define BLE_4X_PWR_SAVE_MODE     4
 ```
-
-   **Opermode command parameters**
-
-```c
-  #define RSI_FEATURE_BIT_MAP                            FEAT_SECURITY_OPEN
-  #define RSI_TCP_IP_BYPASS                              RSI_DISABLE
-  #define RSI_TCP_IP_FEATURE_BIT_MAP                     TCP_IP_FEAT_DHCPV4_CLIENT
-  #define RSI_CUSTOM_FEATURE_BIT_MAP                     FEAT_CUSTOM_FEAT_EXTENTION_VALID
-  #define RSI_EXT_CUSTOM_FEATURE_BIT_MAP                 0
-```
-
 **Note:**
     ble_config.h files are already set with desired configuration in respective example folders user need not change for each example.
 

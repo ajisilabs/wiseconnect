@@ -793,9 +793,6 @@ sl_status_t sl_wifi_get_performance_profile(sl_wifi_performance_profile_t *profi
 
 /** @} */
 
-/** \addtogroup WIFI_MONITOR_API Monitor Mode
-  * \ingroup SL_WIFI_FUNCTIONS
-  * @{ */
 // "Monitor Mode" functions
 
 /***************************************************************************/ /**
@@ -823,11 +820,6 @@ sl_status_t sl_wifi_enable_monitor_mode(sl_wifi_interface_t interface);
  ******************************************************************************/
 sl_status_t sl_wifi_disable_monitor_mode(sl_wifi_interface_t interface);
 
-/** @} */
-
-/** \addtogroup WIFI_P2P_API Wi-Fi Direct
-  * \ingroup SL_WIFI_FUNCTIONS
-  * @{ */
 // P2P functions
 
 /***************************************************************************/ /**
@@ -861,8 +853,6 @@ sl_status_t sl_wifi_start_p2p_discovery(sl_wifi_interface_t interface,
  *   This API is not yet implemented.
  ******************************************************************************/
 sl_status_t sl_wifi_p2p_connect(sl_wifi_interface_t interface, const sl_wifi_p2p_configuration_t *configuration);
-
-/** @} */
 
 /** \addtogroup WIFI_WPS_API Wi-Fi Protected Setup
   * \ingroup SL_WIFI_FUNCTIONS
@@ -967,7 +957,7 @@ sl_status_t sl_wifi_send_raw_data_frame(sl_wifi_interface_t interface, const voi
 
 /***************************************************************************/ /**
  * @brief
- *   Configure TWT parameters. Enables or disables a TWT session. This is blocking API.
+ *   Configure TWT parameters. Enables a TWT session. This is blocking API.
  * @pre 
  *   @ref sl_wifi_connect should be called before this API.
  * @param[in] twt_req
@@ -979,7 +969,7 @@ sl_status_t sl_wifi_enable_target_wake_time(sl_wifi_twt_request_t *twt_req);
 
 /***************************************************************************/ /**
  * @brief
- *   Configure TWT parameters. Enables or disables a TWT session. This is blocking API.
+ *   Configure TWT parameters. Disables a TWT session. This is blocking API.
  * @pre 
  *   @ref sl_wifi_enable_target_wake_time should be called before this API.
  * @param[in] twt_req
@@ -988,6 +978,18 @@ sl_status_t sl_wifi_enable_target_wake_time(sl_wifi_twt_request_t *twt_req);
  *   sl_status_t. See https://docs.silabs.com/gecko-platform/4.1/common/api/group-status for details.
  ******************************************************************************/
 sl_status_t sl_wifi_disable_target_wake_time(sl_wifi_twt_request_t *twt_req);
+
+/***************************************************************************/ /**
+ * @brief
+ *   Calculates and configures TWT parameters based on the given inputs. Enables or disables a TWT session. This is blocking API.
+ * @pre 
+ *   @ref sl_wifi_connect should be called before this API.
+ * @param[in] twt_selection_req
+ *   Configurable TWT selection parameters.
+ * @return
+ *   sl_status_t. See https://docs.silabs.com/gecko-platform/4.1/common/api/group-status for details.
+ ******************************************************************************/
+sl_status_t sl_wifi_target_wake_time_auto_selection(sl_wifi_twt_selection_t *twt_selection_req);
 
 /***************************************************************************/ /**
  * @brief

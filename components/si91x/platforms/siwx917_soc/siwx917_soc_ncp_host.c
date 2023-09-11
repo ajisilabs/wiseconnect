@@ -97,7 +97,7 @@ sl_status_t sl_si91x_host_init(void)
   if (NULL == si91x_async_events) {
     si91x_async_events = osEventFlagsNew(NULL);
   }
-
+  sl_si91x_ta_events_init();
   if (NULL == si91x_thread) {
     const osThreadAttr_t attr = {
 

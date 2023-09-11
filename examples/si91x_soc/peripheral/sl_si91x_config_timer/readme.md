@@ -4,7 +4,7 @@
 
 - This Config Timer example demonstrates two usecases of timer :
 - First as free running timer with GPIO toggle functionality. The timer instance is configured to generate interrupts on reaching match value & toggles GPIO.
-  The counter-0 is set to expire at 1-millisecond (1Hz) intervals.
+  The counter-0 is set to expire at 1-millisecond intervals.
 - Second as waveform generator producing two PWM outputs, counter-0 generates square wave output (50%-duty cycle) and counter-1 generates PWM output with duty cycle varrying from 0% to 100% in steps of 0.5% at every 20 Milliseconds and goes down to 0% in the same step.
 
 ## Overview
@@ -27,19 +27,21 @@
 
 - This example demonstrated Config Timer as a normal counter as well as it generates PWM output and using that PWM, GPIO is toggled.
 - Two macros are present i.e., CT_PWM_MODE_USECASE and CT_COUNTER_MODE_USECASE, by defaut PWM use case is enabled.
+- Enable any one of the below usecase macro at a time.
+
 - If **CT_PWM_MODE_USECASE** is enabled:
   - Config Timer is initialized using \ref sl_si91x_ct_init() API.
   - After intialization, the desired counter parameters are configured using \ref sl_si91x_ct_set_configuration() API, the parameters are set using UC.
   - Match count for both the counters are configured using same \ref sl_si91x_ct_set_match_count() API.
   - PWM duty cycle \ref RSI_MCPWM_SetDutyCycle() API.
-  - The desired OCU parameters are configured using \ref sl_si91x_ct_set_ocu_configuration() API, the parameters are set using UC.
+  - The desired OCU parameters are configured using \ref sl_si91x_ct_set_ocu_configuration() API, the parameters are set using UC. For getting these configurations through UC enable OCU-configuration button on UC.
   - The desired parameters for both counters for OCU are configured using same API \ref sl_si91x_ct_control_ocu_operation(), by changing the counter number.
   - Start both the counters using API \ref sl_si91x_ct_start_on_software_trigger(), by changing the counter number.
   - Enable systick timer.
   - After enabling OCU mode, a continuous loop for pwm output is performed.
   - It creates 2 independent PWMs(running at same frequency) - CT output-0 and CT output-1.
   - CT Output-0 will produce a square wave and CT Output-1 will produce a waveform whose duty cycle is continuously varrying from 0% to 100% in steps of 0.5% at every 20 Milliseconds and goes down to 0% in the same step.
-  - Connect oscilloscope to Evaluation kit board's GPIO-29(EXP6) & GPIO-30(EXP4) for output-0 and output-1 respectively and observe the PWM waveforms.
+  - Connect oscilloscope to Evaluation kit board's GPIO-29 & GPIO-30 for output-0 and output-1 respectively and observe the PWM waveforms.
 - If **CT_COUNTER_MODE_USECASE** is enabled:
   - First Configuring PIN 5 GPIO pinmux mode and direction as output.
   - Config Timer is initialized using \ref sl_si91x_ct_init() API.
@@ -60,7 +62,7 @@
 ### Hardware Setup
 
 - Windows PC
-- Silicon Labs Si917 Evaluation Kit [WSTK + BRD4325A]
+- Silicon Labs Si917 Evaluation Kit [WSTK + BRD4338A]
 
 ![Figure: Introduction](resources/readme/image502a.png)
 
@@ -70,6 +72,10 @@
 - Embedded Development Environment
   - For Silicon Labs Si91x, use the latest version of Simplicity Studio (refer **"Download and Install Simplicity Studio"** section in **getting-started-with-siwx917-soc** guide at **release_package/docs/index.html**)
 
+### VCOM Setup
+- The Docklight tool's setup instructions are provided below..
+
+![Figure: VCOM_setup](resources/readme/vcom.png)
 ### Project Setup
 
 - **Silicon Labs Si91x** refer **"Download SDK"** section in **getting-started-with-siwx917-soc** guide at **release_package/docs/index.html** to work with Si91x and Simplicity Studio.
@@ -77,19 +83,19 @@
 ## Loading Application on Simplicity Studio
 
 1. With the product Si917 selected, navigate to the example projects by clicking on Example Projects & Demos
-   in simplicity studio and click on to ULP_TIMER Example application as shown below.
+   in simplicity studio and click on to CONFIG_TIMER Example application as shown below.
 
 ![Figure: Selecting Example project](resources/readme/image502b.png)
 
 ## Configuration and Steps for Execution
-
-- Configure the following macros in sl_si91x_ct.h file and update/modify following macros if required.
-
+- Configure the following macros in config_timer_example.h file to change the application usecase(enable any one at a time)
 ```C
-#define TIMER_MATCH_VALUE             16000  -  For 1ms timer timeout
 #define CT_PWM_MODE_USECASE           1      -  To run PWM output code
 #define CT_COUNTER_MODE_USECASE       1      -  To run normal counter code
-
+```
+- Configure the following macros in config_timer_example.c file to change match value for counter Mode usecase and update/modify following macros if required.
+```C
+#define TIMER_MATCH_VALUE             16000  -  For 1ms timer timeout
 ```
 
 ### Macros for CT Configurations:
@@ -159,11 +165,20 @@
 
 ## Expected Results -From free counter usecase:
 
--Evaluation kit board's GPIO-69(EXP13) will be toggled ten times at 1 milliseconds periodic rate, along with debug prints.
+-Evaluation kit board's <** GPIO-69(EXP13)to be resolved on 2.0**> will be toggled ten times at 1 milliseconds periodic rate, along with debug prints.
 -After toggling GPIO for 10 times, interrupt callback is unregistered.
+
+## Pin Configuration
+
+|  Discription  | GPIO    | Connector     | 
+| ------------- | ------- | ------------- | 
+|    output-0   | GPIO_29 |     P33       | 
+|    output-1   | GPIO_30 |     P35       |
+
+![Figure: Pin configuration](resources/readme/image502e.png)
 
 ## Expected Results -From PWM usecase:
 
 -CT Output-0 will produce a square wave and CT Output-1 will produce a waveform whose duty cycle is continuously varrying from 0% to 100%
 in steps of 0.5% at every 20 Milliseconds and goes down to 0% in the same step.
--Connect oscilloscope to Evaluation kit board's GPIO-29(EXP6) & GPIO-30(EXP4) for output-0 and output-1 respectively and observe the PWM waveforms.
+-Connect oscilloscope to Evaluation kit board's GPIO-29(P33) & GPIO-30(P35) for output-0 and output-1 respectively and observe the PWM waveforms.

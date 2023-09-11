@@ -151,10 +151,11 @@ sl_status_t sl_sntp_client_get_time_date(uint8_t *data, uint16_t data_length, ui
                                         wait_time,
                                         (void *)sdk_context,
                                         &buffer);
-  if (SL_STATUS_OK != status) {
+
+  if ((status != SL_STATUS_OK) && (buffer != NULL)) {
     sl_si91x_host_free_buffer(buffer, SL_WIFI_RX_FRAME_BUFFER);
-    return status;
   }
+  VERIFY_STATUS_AND_RETURN(status);
 
   packet = sl_si91x_host_get_buffer_data(buffer, 0, NULL);
   if (packet->length > data_length) {

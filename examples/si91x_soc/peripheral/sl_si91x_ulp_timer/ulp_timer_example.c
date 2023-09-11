@@ -47,14 +47,14 @@
 #define RESERVED_IRQ_COUNT             16                    // Reserved IRQ count
 #define EXT_IRQ_COUNT                  98                    // External IRQ count
 #define VECTOR_TABLE_ENTRIES           (RESERVED_IRQ_COUNT + EXT_IRQ_COUNT) // Vector table entries
-#define LED1                           1                                    // For On-board LED-0
+#define LED1                           1                                    // For On-board LED-1
 #define ONE_SEC_MATCH_VALUE_256US_TYPE 3906 // Timer match value for 1-sec, in 256us type
 #define FIFTH_INTERRUPT_COUNT          5    // Count for fifth timeout interrupt
 #define TENTH_INTERRUPT_COUNT          10   // Count for tenth timeout interrupt
 
 // Macros used to construct ulp-timer instance
 #define ULP_TIMER_INSTANCE \
-  SL_ULP_TIMER_TIMER0 // Current ulp-timer instance, user can pass selected timer-number in place of '0'
+  SL_ULP_TIMER_TIMER0 // ulp-timer instance to be used, user can pass selected timer-number in place of '0'
 #define _CONCAT_TWO_TOKENS(token_1, token_2) token_1##token_2
 #define CONCAT_TWO_TOKENS(token_1, token_2)  _CONCAT_TWO_TOKENS(token_1, token_2)
 #define SL_ULP_TIMER_HANDLE                  CONCAT_TWO_TOKENS(sl_timer_handle_timer, ULP_TIMER_INSTANCE)

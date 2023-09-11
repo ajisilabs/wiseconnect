@@ -70,7 +70,7 @@ extern sl_gspi_driver_t Driver_GSPI_MASTER;
  *********************   LOCAL FUNCTION PROTOTYPES   ***************************
  ******************************************************************************/
 static sl_status_t convert_arm_to_sl_error_code(int32_t error);
-static sl_status_t convert_rsi_to_sl_error_code(error_t error);
+static sl_status_t convert_rsi_to_sl_error_code(rsi_error_t error);
 static sl_status_t validate_control_parameters(sl_gspi_control_config_t *control_configuration);
 static sl_status_t validate_clock_parameters(sl_gspi_clock_config_t *clock_configuration);
 static sl_status_t set_slave_gpio_state(sl_gspi_handle_t gspi_handle, boolean_t value);
@@ -95,7 +95,7 @@ static void callback_event_handler(uint32_t event);
 sl_status_t sl_si91x_gspi_configure_clock(sl_gspi_clock_config_t *clock_configuration)
 {
   sl_status_t status;
-  error_t error_status;
+  rsi_error_t error_status;
   do {
     // To validate the structure pointer, if the parameters is NULL, it
     // returns an error code
@@ -703,7 +703,7 @@ static sl_status_t convert_arm_to_sl_error_code(int32_t error)
  * after successful conversion it breaks the switch statement.
  * If the error code is not listed, by default is SL_STATUS_FAIL.
  ******************************************************************************/
-static sl_status_t convert_rsi_to_sl_error_code(error_t error)
+static sl_status_t convert_rsi_to_sl_error_code(rsi_error_t error)
 {
   sl_status_t status;
   switch (error) {

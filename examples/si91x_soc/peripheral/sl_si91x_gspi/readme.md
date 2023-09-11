@@ -7,7 +7,6 @@
   - Master transmits data on MOSI pin and receives the same data on MISO pin
 - This also supports send and receive data with any SPI slave, additionally it also supports DMA and non-DMA transfer.
 - For half duplex communication, i.e., send and receive, master / slave connection is required.
-- Note: For GSPI example, it mandatory to run it in non-rom code, i.e., Navigate to core/config/rsi_ccp_user_config.h and comment out the A11 ROM and ROMDRIVER_PRESENT
 
 ## Overview
 
@@ -72,7 +71,7 @@
 ### Hardware Requirements
 
 - Windows PC
-- Silicon Labs [Si917 Evaluation Kit WPK/WSTK + BRD4325A]
+- Silicon Labs [Si917 Evaluation Kit WPK/WSTK + BRD4338A]
 
 ![Figure: Introduction](resources/readme/image505a.png)
 
@@ -85,6 +84,11 @@
 ## Project Setup
 
 - **Silicon Labs Si91x** refer **"Download SDK"** section in **getting-started-with-siwx917-soc** guide at **release_package/docs/index.html** to work with Si91x and Simplicity Studio
+
+### VCOM Setup
+- The Docklight tool's setup instructions are provided below..
+
+![Figure: VCOM_setup](resources/readme/vcom.png)
 
 ## Loading Application on Simplicity Studio
 
@@ -129,20 +133,16 @@
 
 ## Pin Configuration
 
-| GPIO pin                | Description             |
-| ----------------------- | ----------------------- |
-| GPIO_25 [EXP_HEADER-15] | RTE_SSI_MASTER_CLK_PIN  |
-| GPIO_28 [EXP_HEADER-8]  | RTE_SSI_MASTER_CS0_PIN  |
-| GPIO_26 [EXP_HEADER-16] | RTE_SSI_MASTER_MOSI_PIN |
-| GPIO_27 [EXP_HEADER-10] | RTE_SSI_MASTER_MISO_PIN |
+|   GPIO Pin    |      Description        |
+| ------------- | ----------------------- |
+| GPIO_25 [P25] | RTE_SSI_MASTER_CLK_PIN  |
+| GPIO_28 [P31] | RTE_SSI_MASTER_CS0_PIN  |
+| GPIO_26 [P27] | RTE_SSI_MASTER_MOSI_PIN |
+| GPIO_27 [P29] | RTE_SSI_MASTER_MISO_PIN |
 
 ## Pin Description
 
 ![Figure: Pin Configuration for GSPI1](resources/readme/image505d.png)
-
-![Figure: Pin Configuration for GSPI2](resources/readme/image505e.png)
-
-**Note!** Make sure pin configuration in RTE_Device_9117.h file.(path: /$project/wiseconnect_1.0.0/platforms/si91x/drivers/cmsis_driver/config/RTE_Device_9117.h)
 
 ## Executing the Application
 

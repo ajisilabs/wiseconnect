@@ -5,6 +5,8 @@ int sl_si91x_socket_async(int family, int type, int protocol, receive_data_callb
 
 int sl_si91x_socket(int family, int type, int protocol);
 
+int sl_si91x_setsockopt(int32_t sockID, int level, int option_name, const void *option_value, socklen_t option_len);
+
 int sl_si91x_bind(int socket, const struct sockaddr *addr, socklen_t addr_len);
 
 int sl_si91x_listen(int socket, int max_number_of_clients);

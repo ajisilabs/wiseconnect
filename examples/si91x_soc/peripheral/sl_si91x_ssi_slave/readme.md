@@ -66,7 +66,7 @@
 ### Hardware Requirements
 
 - Windows PC
-- Silicon Labs [Si917 Evaluation Kit WPK/WSTK + BRD4325A]
+- Silicon Labs [Si917 Evaluation Kit WPK/WSTK + BRD4338A]
 
 ![Figure: Introduction](resources/readme/image511a.png)
 
@@ -79,6 +79,11 @@
 ## Project Setup
 
 - **Silicon Labs Si91x** refer **"Download SDK"** section in **getting-started-with-siwx917-soc** guide at **release_package/docs/index.html** to work with Si91x and Simplicity Studio
+
+### VCOM Setup
+- The Docklight tool's setup instructions are provided below..
+
+![Figure: VCOM_setup](resources/readme/vcom.png)
 
 ## Loading Application on Simplicity Studio
 
@@ -122,15 +127,15 @@
 
 ## Pin Configuration
 
-| GPIO pin                | Description             |
-| ----------------------- | ----------------------- |
-| GPIO_26 [EXP_HEADER-16] | RTE_SSI_SLAVE_SCK_PIN   |
-| GPIO_25 [EXP_HEADER-15] | RTE_SSI_SLAVE_CS_PIN    |
-| GPIO_27 [EXP_HEADER-10] | RTE_SSI_SLAVE_MOSI_PIN  |
-| GPIO_28 [EXP_HEADER-8]  | RTE_SSI_SLAVE_MISO_PIN  |
+| GPIO pin      | Description             |
+| ------------- | ----------------------- |
+| GPIO_26 [P27] | RTE_SSI_SLAVE_SCK_PIN   |
+| GPIO_25 [F09] | RTE_SSI_SLAVE_CS_PIN    |
+| GPIO_27 [P29] | RTE_SSI_SLAVE_MOSI_PIN  |
+| GPIO_28 [P31] | RTE_SSI_SLAVE_MISO_PIN  |
 
 ![Figure: Pin Configuration for SSI1](resources/readme/image511d.png)
-![Figure: Pin Configuration for SSI2](resources/readme/image511e.png)
+
 
 **Note!** Make sure pin configuration in RTE_Device_917.h file.(path: /$project/wiseconnect3/components/siwx917_soc/drivers/cmsis_driver/config/RTE_Device_917.h)
 

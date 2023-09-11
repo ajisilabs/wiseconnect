@@ -612,7 +612,7 @@ __STATIC_INLINE void sl_si91x_i2c_set_follower_mask_address(I2C_TypeDef *i2c, ui
   SL_I2C_ASSERT(I2C_REF_VALID(i2c));
   // It stores the address in follower address register, used when leader acts as
   // follower.
-  i2c->IC_SAR_b.IC_SAR = (mask & 0x3FF);
+  i2c->IC_SAR_b.IC_SAR = (unsigned int)((mask & 0x3FF) & 0x03FF);
 }
 
 /***************************************************************************/ /**
@@ -646,7 +646,7 @@ __STATIC_INLINE void sl_si91x_i2c_send_nack(I2C_TypeDef *i2c)
   SL_I2C_ASSERT(I2C_REF_VALID(i2c));
   // It generates NACK after a byte is received.
   // If this bit is not set then normal transfer is performed.
-  i2c->IC_SLV_DATA_NACK_ONLY_b.NACK = ENABLE;
+  i2c->IC_SLV_DATA_NACK_ONLY = ENABLE;
 }
 
 /***************************************************************************/ /**

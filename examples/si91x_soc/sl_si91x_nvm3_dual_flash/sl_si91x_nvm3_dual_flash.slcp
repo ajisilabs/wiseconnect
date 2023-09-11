@@ -15,8 +15,8 @@ source:
 include:
   - path:
     file_list:
-    - path: app.h
-    - path: nvm3_app.h
+      - path: app.h
+      - path: nvm3_app.h
 sdk: {id: gecko_sdk, version: 4.3.1}
 toolchain_settings: []
 requires:
@@ -24,10 +24,7 @@ requires:
   - name: romdriver_egpio
   - name: rsilib_userconfig
   - name: sl_si91x_dual_flash_nvm3
-  - name: sl_siwx917_platform
-  - name: sl_siwx917_systemcall
   - name: si917_memory_default_config
-  - name: si91x_support
 configuration:
   - name: NVM3_DEFAULT_MAX_OBJECT_SIZE
     value: 204
@@ -39,16 +36,16 @@ other_file:
 provides:
   - name: si91x_soc
 define:
-  - name: SYSCALLS_WRITE
+  - name: RSI_M4_INTERFACE
 template_contribution:
   - name: NVM3_DUAL_FLASH
     value: 1
 ui_hints:
   highlight:
-  - path: readme.md
-    focus: true
+    - path: readme.md
+      focus: true
 sdk_extension:
   - id: wiseconnect3_sdk
-    version: 3.0.13
+    version: 0.0.0
 post_build:
   path: ../../../utilities/postbuild_profile/wiseconnect_soc.slpb

@@ -472,3 +472,81 @@ sl_status_t sl_si91x_transmit_test_start(uint16_t power,
  *   sl_status_t. See https://docs.silabs.com/gecko-platform/4.1/common/api/group-status for details.
  ******************************************************************************/
 sl_status_t sl_si91x_transmit_test_stop(void);
+
+/***************************************************************************/ /**
+ * @brief
+ *   This API will command the firmware to update the existing Flash/EFuse calibration data. This is a blocking API.
+ * @pre 
+ *   @ref sl_wifi_init, sl_si91x_transmit_test_start and sl_si91x_frequency_offset should be called before this API.
+ * @param[in] calib_write
+ *   Write calibration configuration of type @ref sl_si91x_calibration_write_t
+ * @return
+ *   sl_status_t. See https://docs.silabs.com/gecko-platform/4.1/common/api/group-status for details.
+ ******************************************************************************/
+sl_status_t sl_si91x_calibration_write(sl_si91x_calibration_write_t calib_write);
+
+/***************************************************************************/ /**
+ * @brief
+ *   This API reads the calibration data from the Flash/EFuse storage. This is a blocking API.
+ * @pre 
+ *   @ref sl_wifi_init should be called before this API.
+ * @param[in] target
+ * 			0 - READ_FROM_EFUSE (read calibration data from the EFuse) 
+ * 			1 - READ_FROM_FLASH (read calibration data from the Flash) 
+ * @param[out] calibration_read
+ *   Read the calibration configuration of type @ref sl_si91x_calibration_read_t
+ * @return
+ *   sl_status_t. See https://docs.silabs.com/gecko-platform/4.1/common/api/group-status for details.
+ *******************************************************************************/
+sl_status_t sl_si91x_calibration_read(sl_si91x_calibration_read_t target,
+                                      sl_si91x_calibration_read_t *calibration_read);
+
+/***************************************************************************/ /**
+ * @brief
+ *  Application to provide feedback of Frequency error in KHz. This is a blocking API.
+ * @pre 
+ *   @ref sl_wifi_init should be called before this API.
+ * @param[in] frequency_calibration
+ *   Frequency in KHz of type @ref sl_si91x_freq_offset_t. 
+ * @return
+ *   sl_status_t. See https://docs.silabs.com/gecko-platform/4.1/common/api/group-status for details.
+ *******************************************************************************/
+sl_status_t sl_si91x_frequency_offset(const sl_si91x_freq_offset_t *frequency_calibration);
+
+/***************************************************************************/ /**
+ * @brief
+ *   Application to provide feedback of evm_offset error. This is a blocking API.
+ * @pre 
+ *   @ref sl_wifi_init should be called before this API.
+ * @param[in] evm_offset
+ *   evm offset of type @ref sl_si91x_evm_offset_t
+ * @return
+ *   sl_status_t. See https://docs.silabs.com/gecko-platform/4.1/common/api/group-status for details.
+ *******************************************************************************/
+sl_status_t sl_si91x_evm_offset(const sl_si91x_evm_offset_t *evm_offset);
+
+/***************************************************************************/ /**
+ * @brief
+ *   This API will command the firmware to update the existing Flash/EFuse calibration data. This is a blocking API.
+ * @pre 
+ *   @ref sl_wifi_init, sl_si91x_evm_offset and sl_si91x_transmit_test_start should be called before this API.
+ * @param[in] evm_write
+ *   Write the evm calibration configuration  of type @ref sl_si91x_evm_write_t
+ * @return
+ *   sl_status_t. See https://docs.silabs.com/gecko-platform/4.1/common/api/group-status for details.
+ *******************************************************************************/
+sl_status_t sl_si91x_evm_write(const sl_si91x_evm_write_t *evm_write);
+
+/***************************************************************************/ /**
+ * @brief
+ *  This API will command the firmware to get the data from the Efuse memory location. This is a blocking API.
+ * @pre 
+ *   @ref sl_wifi_init should be called before this API.
+ * @param[in] efuse_read
+ *  efuse read structure, which contains efuse read address offset and read data length of type @ref sl_si91x_efuse_read_t
+ * @param[out] efuse_read_buf
+ *  efuse read buffer
+ * @return
+ *   sl_status_t. See https://docs.silabs.com/gecko-platform/4.1/common/api/group-status for details.
+ *******************************************************************************/
+sl_status_t sl_si91x_efuse_read(sl_si91x_efuse_read_t *efuse_read, uint8_t *efuse_read_buf);

@@ -64,7 +64,7 @@ stc_sio_uart_config_t UartInitstc = { 0 };
 /*******************************************************************************
  *********************   LOCAL FUNCTION PROTOTYPES   ***************************
  ******************************************************************************/
-static sl_status_t convert_rsi_to_sl_error_code(error_t error);
+static sl_status_t convert_rsi_to_sl_error_code(rsi_error_t error);
 static void callback_event_handler(en_sio_spi_events_t en_event);
 
 /*******************************************************************************
@@ -77,7 +77,7 @@ static void callback_event_handler(en_sio_spi_events_t en_event);
 sl_status_t sl_si91x_sio_init(void)
 {
   sl_status_t status;
-  error_t error_status;
+  rsi_error_t error_status;
   // Initialize the SIO
   error_status = RSI_SIO_Initialization();
   if (error_status == RSI_OK) {
@@ -100,7 +100,7 @@ sl_status_t sl_si91x_sio_spi_init(sl_sio_spi_config_t *configuration)
   configuration = &pstcSpiConfigUc;
 #endif
   sl_status_t status;
-  error_t error_status;
+  rsi_error_t error_status;
   do {
     if (configuration == NULL) {
       status = SL_STATUS_NULL_POINTER; // Returns null pointer status code
@@ -223,7 +223,7 @@ sl_status_t sl_si91x_sio_spi_transfer(sl_sio_spi_xfer_config_t *xfer_config)
   xfer_config->u8BitLen = pstcSpiConfigUc.u8BitLen;
 #endif
   sl_status_t status;
-  error_t error_status;
+  rsi_error_t error_status;
   do {
     if (xfer_config == NULL) {
       status = SL_STATUS_NULL_POINTER; // Returns null pointer status code
@@ -264,7 +264,7 @@ static void callback_event_handler(en_sio_spi_events_t en_event)
  * after successful conversion it breaks the switch statement.
  * If the error code is not listed, by default is SL_STATUS_FAIL.
  ******************************************************************************/
-static sl_status_t convert_rsi_to_sl_error_code(error_t error)
+static sl_status_t convert_rsi_to_sl_error_code(rsi_error_t error)
 {
   sl_status_t status;
   switch (error) {
@@ -317,7 +317,7 @@ sl_status_t sl_si91x_sio_uart_init(sl_sio_uart_config_t *configuration)
   UartInitstc   = UartInitstcUc;
 #endif
   sl_status_t status;
-  error_t error_status;
+  rsi_error_t error_status;
   configuration->pfn = uart_user_callback;
   do {
     if (configuration == NULL) {
@@ -340,7 +340,7 @@ sl_status_t sl_si91x_sio_uart_init(sl_sio_uart_config_t *configuration)
 sl_status_t sl_si91x_sio_uart_send(const void *buffer, uint16_t length)
 {
   sl_status_t status;
-  error_t error_status;
+  rsi_error_t error_status;
   do {
     if (buffer == NULL) {
       status = SL_STATUS_NULL_POINTER; // Returns null pointer status code
@@ -362,7 +362,7 @@ sl_status_t sl_si91x_sio_uart_send(const void *buffer, uint16_t length)
 sl_status_t sl_si91x_sio_uart_send_blocking(const void *buffer, uint16_t length)
 {
   sl_status_t status;
-  error_t error_status;
+  rsi_error_t error_status;
   do {
     if (buffer == NULL) {
       status = SL_STATUS_NULL_POINTER; // Returns null pointer status code
@@ -386,7 +386,7 @@ sl_status_t sl_si91x_sio_uart_send_blocking(const void *buffer, uint16_t length)
 sl_status_t sl_si91x_sio_uart_read(void *data_buffer, uint16_t num_bytes)
 {
   sl_status_t status;
-  error_t error_status;
+  rsi_error_t error_status;
   do {
     if (data_buffer == NULL) {
       status = SL_STATUS_NULL_POINTER; // Returns null pointer status code
@@ -411,7 +411,7 @@ sl_status_t sl_si91x_sio_uart_read(void *data_buffer, uint16_t num_bytes)
 sl_status_t sl_si91x_sio_uart_read_blocking(void *data_buffer, uint16_t num_bytes)
 {
   sl_status_t status;
-  error_t error_status;
+  rsi_error_t error_status;
   do {
     if (data_buffer == NULL) {
       status = SL_STATUS_NULL_POINTER; // Returns null pointer status code
@@ -491,7 +491,7 @@ void sl_si91x_sio_uart_rx_done(void)
 sl_status_t sl_si91x_sio_i2c_write(stc_sio_i2c_config_t *configuration, uint8_t address, uint8_t *data, uint16_t length)
 {
   sl_status_t status;
-  error_t error_status;
+  rsi_error_t error_status;
 #ifdef SIO_UC
   configuration = &i2cConfigUc;
 #endif
@@ -519,7 +519,7 @@ sl_status_t sl_si91x_sio_i2c_write(stc_sio_i2c_config_t *configuration, uint8_t 
 sl_status_t sl_si91x_sio_i2c_read(stc_sio_i2c_config_t *configuration, uint8_t address, uint8_t *data, uint16_t length)
 {
   sl_status_t status;
-  error_t error_status;
+  rsi_error_t error_status;
 #ifdef SIO_UC
   configuration = &i2cConfigUc;
 #endif
@@ -553,7 +553,7 @@ sl_status_t sl_si91x_sio_i2c_transfer(stc_sio_i2c_config_t *configuration,
   configuration = &i2cConfigUc;
 #endif
   sl_status_t status;
-  error_t error_status;
+  rsi_error_t error_status;
   do {
     // Returns null pointer status code
     if (configuration == NULL) {

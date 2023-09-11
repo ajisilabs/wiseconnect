@@ -44,28 +44,43 @@ Follow the [Getting Started with Wiseconnect3 SDK](https://docs.silabs.com/wisec
 
 - Ensure the SiWx91x loaded with the latest firmware following the [Upgrade Si91x firmware](https://docs.silabs.com/wiseconnect/latest/wiseconnect-getting-started/getting-started-with-soc-mode#upgrade-si-wx91x-connectivity-firmware)
 
+- Ensure the latest Gecko SDK along with the extension WiSeConnect3 is added to Simplicity Studio.
+
 ### 3.1 Creating the project
 
 #### 3.1.1 SoC mode
+
+- Ensure the SiWx91x set up is connected to your PC.
 
 - In the Simplicity Studio IDE, the SiWx91x SoC board will be detected under **Debug Adapters** pane as shown below.
 
   **![Soc Board detection](resources/readme/soc_board_detection.png)**
 
-- Ensure the latest Gecko SDK along with the WiSeConnect3 extension is added to Simplicity Studio.
-- Studio should detect your board. Your board will be shown here. Click on the board detected and go to **EXAMPLE PROJECTS & DEMOS** section.
+#### 3.1.2 NCP mode
 
-- Filter for Wi-Fi examples from the Gecko SDK added. For this, check the _Wi-Fi_ checkbox under **Wireless Technology**
+- Ensure the EFx32 and SiWx91x set up is connected to your PC.
 
-  **![AWS MQTT project](resources/readme/aws_mqtt_example_soc.png)**
+- In the Simplicity Studio IDE, the EFR32 board will be detected under **Debug Adapters** pane as shown below.
+
+  **![EFR32 Board detection](resources/readme/efr32.png)**
+
+### 3.2 Importing the project
+
+- Studio should detect your board. Your board will be shown here. Click on the board detected and go to **EXAMPLE PROJECTS & DEMOS** section 
+
+#### SOC Mode
+
+- Select **Wi-Fi - AWS IoT MQTT Client(SOC)** test application
+
+  **![project_selection](resources/readme/aws_mqtt_example_soc.png)**
 
 - Click 'Create'. The "New Project Wizard" window appears. Click 'Finish'
 
-  **![Create AWS MQTT project](resources/readme/create_project_soc.png)**
+  **![creation_final](resources/readme/create_project_soc.png)**
 
-### 3.2 Set up for application prints
+### 3.3 Set up for application prints
 
-#### 3.2.1 SoC mode
+#### 3.3.1 Teraterm set up - for BRD4325A, BRD4325B, BRD4325C, BRD4325G
 
 You can use either of the below USB to UART converters for application prints.
 
@@ -74,14 +89,36 @@ You can use either of the below USB to UART converters for application prints.
    - Connect Tx (Pin-6) to P27 on WSTK
    - Connect GND (Pin 8 or 10) to GND on WSTK
 
-     **![FTDI_prints](resources/readme/usb_to_uart_1.png)**
+   **![FTDI_prints](resources/readme/usb_to_uart_1.png)**
 
 2. Set up using USB to UART converter cable.
 
    - Connect RX (Pin 5) of TTL convertor to P27 on WSTK
    - Connect GND (Pin1) of TTL convertor to GND on WSTK
 
-     **![FTDI_prints](resources/readme/usb_to_uart_2.png)**
+   **![FTDI_prints](resources/readme/usb_to_uart_2.png)**
+
+3. Open the Teraterm tool.
+
+   - For SoC mode, choose the serial port to which USB to UART converter is connected and click on **OK**.
+
+     **![port_selection_soc](resources/readme/port_selection_soc.png)**
+
+**Note:** For Other 917 SoC boards please refer section #3.3.2
+
+#### 3.3.2 **Teraterm set up - for NCP and SoC modes**
+
+1. Open the Teraterm tool.
+
+- choose the J-Link port and click on **OK**.
+    
+    **![J-link - NCP](resources/readme/port_selection.png)**
+
+2. Navigate to the Setup → Serial port and update the baud rate to **115200** and click on **OK**.
+
+    **![serial_port_setup](resources/readme/serial_port_setup.png)**
+
+    **![serial_port](resources/readme/serial_port.png)**
 
 ## 4 Application Build Environment
 
@@ -114,6 +151,7 @@ By default, the application connects to the remote Access point with **default_w
 ```c
 #define DEFAULT_WIFI_CLIENT_PROFILE_SSID "YOUR_AP_SSID"
 #define DEFAULT_WIFI_CLIENT_CREDENTIAL   "YOUR_AP_PASSPHRASE"
+#define DEFAULT_WIFI_CLIENT_SECURITY_TYPE SL_WIFI_WPA2 
 ```
 
 ### 4.1.3 Configure below parameters in **aws_iot_config.h** file in **\<project>/resources/defaults/**
@@ -142,8 +180,6 @@ By default, the application connects to the remote Access point with **default_w
   ![debug_mode_soc](resources/readme/debugmodesoc117.png)
 
 ### 4.4 Application Output
-
-- SoC mode:
 
 ![Application prints](resources/readme/debug_prints_with_data_transfer_soc.png)
 

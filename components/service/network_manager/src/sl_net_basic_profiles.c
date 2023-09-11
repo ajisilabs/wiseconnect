@@ -8,10 +8,10 @@
 #define MAX_WIFI_AP_PROFILES     2
 
 static sl_net_wifi_client_profile_t wifi_client_profiles[MAX_WIFI_CLIENT_PROFILES] = {
-  [0] = default_wifi_client_profile,
+  [0] = DEFAULT_WIFI_CLIENT_PROFILE,
 };
 static sl_net_wifi_ap_profile_t wifi_ap_profiles[MAX_WIFI_AP_PROFILES] = {
-  [0] = default_wifi_ap_profile,
+  [0] = DEFAULT_WIFI_ACCESS_POINT_PROFILE,
 };
 
 sl_status_t sl_net_set_profile(sl_net_interface_t interface,

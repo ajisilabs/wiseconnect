@@ -99,22 +99,27 @@ __WEAK sl_status_t sl_si91x_host_process_data_frame(sl_wifi_interface_t interfac
 void si91x_event_handler_thread(void *args)
 {
   UNUSED_PARAMETER(args);
+  sl_wifi_event_t wifi_event    = 0;
+  uint32_t event                = 0;
+  sl_wifi_buffer_t *buffer      = NULL;
+  sl_si91x_packet_t *packet     = NULL;
+  sl_si91x_queue_packet_t *data = NULL;
+  uint16_t frame_status         = 0;
+  const uint32_t event_mask =
+    (NCP_HOST_WLAN_NOTIFICATION_EVENT | NCP_HOST_NETWORK_NOTIFICATION_EVENT | NCP_HOST_SOCKET_NOTIFICATION_EVENT);
 
   while (1) {
-    const uint32_t event_mask =
-      (NCP_HOST_WLAN_NOTIFICATION_EVENT | NCP_HOST_NETWORK_NOTIFICATION_EVENT | NCP_HOST_SOCKET_NOTIFICATION_EVENT);
-    uint32_t event = si91x_host_wait_for_async_event(event_mask, osWaitForever);
+    event = si91x_host_wait_for_async_event(event_mask, osWaitForever);
 
     if ((event & NCP_HOST_WLAN_NOTIFICATION_EVENT) != 0) {
       while (sl_si91x_host_queue_status(SI91X_WLAN_EVENT_QUEUE) != 0) {
-        sl_wifi_buffer_t *buffer = NULL;
         if (sl_si91x_host_remove_from_queue(SI91X_WLAN_EVENT_QUEUE, &buffer) == SL_STATUS_OK) {
-          sl_si91x_packet_t *packet   = sl_si91x_host_get_buffer_data(buffer, 0, NULL);
-          const uint16_t frame_status = get_si91x_frame_status(packet);
+          packet       = sl_si91x_host_get_buffer_data(buffer, 0, NULL);
+          frame_status = get_si91x_frame_status(packet);
 
           // Call event handler
           if (si91x_event_handler != NULL) {
-            sl_wifi_event_t wifi_event = convert_si91x_event_to_sl_wifi_event(packet->command, frame_status);
+            wifi_event = convert_si91x_event_to_sl_wifi_event(packet->command, frame_status);
             if (wifi_event != SL_WIFI_INVALID_EVENT) {
               si91x_event_handler(wifi_event, buffer);
             }
@@ -130,10 +135,9 @@ void si91x_event_handler_thread(void *args)
     // (probably firmware issue), Free the resources of the packet to avoid memory leak
     if ((event & NCP_HOST_NETWORK_NOTIFICATION_EVENT) != 0) {
       while (sl_si91x_host_queue_status(SI91X_NETWORK_EVENT_QUEUE) != 0) {
-        sl_wifi_buffer_t *buffer = NULL;
         if (sl_si91x_host_remove_from_queue(SI91X_NETWORK_EVENT_QUEUE, &buffer) == SL_STATUS_OK) {
-          sl_si91x_queue_packet_t *data = (sl_si91x_queue_packet_t *)sl_si91x_host_get_buffer_data(buffer, 0, NULL);
-          sl_si91x_packet_t *packet = (sl_si91x_packet_t *)sl_si91x_host_get_buffer_data(data->host_packet, 0, NULL);
+          data   = (sl_si91x_queue_packet_t *)sl_si91x_host_get_buffer_data(buffer, 0, NULL);
+          packet = (sl_si91x_packet_t *)sl_si91x_host_get_buffer_data(data->host_packet, 0, NULL);
 
           SL_NET_EVENT_DISPATCH_HANDLER(data, packet);
 
@@ -147,10 +151,9 @@ void si91x_event_handler_thread(void *args)
 
     if ((event & NCP_HOST_SOCKET_NOTIFICATION_EVENT) != 0) {
       while (0 != sl_si91x_host_queue_status(SI91X_SOCKET_EVENT_QUEUE)) {
-        sl_wifi_buffer_t *buffer = NULL;
         if (sl_si91x_host_remove_from_queue(SI91X_SOCKET_EVENT_QUEUE, &buffer) == SL_STATUS_OK) {
-          sl_si91x_queue_packet_t *data = (sl_si91x_queue_packet_t *)sl_si91x_host_get_buffer_data(buffer, 0, NULL);
-          sl_si91x_packet_t *packet = (sl_si91x_packet_t *)sl_si91x_host_get_buffer_data(data->host_packet, 0, NULL);
+          data   = (sl_si91x_queue_packet_t *)sl_si91x_host_get_buffer_data(buffer, 0, NULL);
+          packet = (sl_si91x_packet_t *)sl_si91x_host_get_buffer_data(data->host_packet, 0, NULL);
 
           SL_NET_EVENT_DISPATCH_HANDLER(data, packet);
 
@@ -280,6 +283,7 @@ void si91x_bus_thread(void *args)
             // intentional fallthrough
             case RSI_COMMON_RSP_GET_RAM_DUMP:
             case RSI_COMMON_RSP_ANTENNA_SELECT:
+            case RSI_COMMON_RSP_ENCRYPT_CRYPTO:
             case RSI_COMMON_RSP_FEATURE_FRAME: {
               ++command_trace[SI91X_COMMON_CMD].rx_counter;
 
@@ -340,15 +344,23 @@ void si91x_bus_thread(void *args)
             case RSI_WLAN_RSP_MAC_ADDRESS:
             case RSI_WLAN_RSP_EXT_STATS:
             case RSI_WLAN_RSP_RX_STATS:
+            case RSI_WLAN_RSP_MODULE_STATE:
             case RSI_WLAN_RSP_QUERY_GO_PARAMS:
             case RSI_WLAN_RSP_ROAM_PARAMS:
             case RSI_WLAN_RSP_HTTP_OTAF:
             case RSI_COMMON_RSP_TA_M4_COMMANDS:
             case RSI_WLAN_RSP_CLIENT_CONNECTED:
             case RSI_WLAN_RSP_CLIENT_DISCONNECTED:
+            case RSI_WLAN_RSP_CALIB_WRITE:
+            case RSI_WLAN_RSP_CALIB_READ:
+            case RSI_WLAN_RSP_FREQ_OFFSET:
+            case RSI_WLAN_RSP_EVM_OFFSET:
+            case RSI_WLAN_RSP_EVM_WRITE:
+            case RSI_WLAN_RSP_EFUSE_READ:
             case RSI_WLAN_RSP_FILTER_BCAST_PACKETS:
             case RSI_WLAN_RSP_TWT_PARAMS:
             case RSI_WLAN_RSP_TWT_ASYNC:
+            case RSI_WLAN_RSP_TWT_AUTO_CONFIG:
             case RSI_WLAN_RSP_11AX_PARAMS:
             case RSI_WLAN_RSP_REJOIN_PARAMS:
             case RSI_WLAN_RSP_GAIN_TABLE:
@@ -867,7 +879,7 @@ static sl_status_t bus_write_frame(sl_si91x_queue_type_t queue_type,
 
   if (status != SL_STATUS_OK) {
     SL_DEBUG_LOG("\r\n BUS_WRITE_ERROR \r\n");
-    __asm__("bkpt");
+    BREAKPOINT();
   }
 
   SL_DEBUG_LOG("<>>>> Tx -> queueId : %u, frameId : 0x%x, length : %u\n",

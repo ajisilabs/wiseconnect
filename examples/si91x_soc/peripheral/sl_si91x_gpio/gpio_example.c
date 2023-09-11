@@ -71,12 +71,6 @@
 #define DELAY            1000 // Delay for 1sec
 #define FALL_EDGE        8    // Fall edge event
 
-#define UULP_INTR_1 0x01 // UULP GPIO pin interrupt 1
-#define UULP_INTR_2 0x02 // UULP GPIO pin interrupt 2
-#define UULP_INTR_3 0x04 // UULP GPIO pin interrupt 3
-#define UULP_INTR_4 0x08 // UULP GPIO pin interrupt 4
-#define UULP_INTR_5 0x10 // UULP GPIO pin interrupt 5
-#define UULP_MASK   0x00
 /*******************************************************************************
  ********************************   ENUMS   ************************************
  ******************************************************************************/
@@ -116,19 +110,6 @@ static void delay(uint32_t idelay);
 static void sl_gpio_initialization(void);
 static void sl_gpio_ulp_initialization(void);
 static void sl_gpio_uulp_initialization(void);
-void PIN_IRQ0_Handler(void);
-void PIN_IRQ1_Handler(void);
-void PIN_IRQ2_Handler(void);
-void PIN_IRQ3_Handler(void);
-void PIN_IRQ4_Handler(void);
-void PIN_IRQ5_Handler(void);
-void PIN_IRQ6_Handler(void);
-void PIN_IRQ7_Handler(void);
-void GRP_IRQ0_Handler(void);
-void GRP_IRQ1_Handler(void);
-void UULP_PIN_IRQ_Handler(void);
-void ULP_PIN_IRQ_Handler(void);
-void ULP_GROUP_IRQ_Handler(void);
 
 /*******************************************************************************
  **************************   GLOBAL FUNCTIONS   *******************************
@@ -437,121 +418,4 @@ static void sl_gpio_uulp_initialization(void)
   // Set NPSS GPIO pin direction
   sl_si91x_gpio_set_uulp_npss_direction(UULP_PIN0, (sl_si91x_gpio_direction_t)GPIO_OUTPUT);
   sl_si91x_gpio_set_uulp_npss_direction(UULP_PIN2, (sl_si91x_gpio_direction_t)GPIO_INPUT);
-}
-
-/*******************************************************************************
- *   This API handles GPIO pin interrupt 0 request
- ******************************************************************************/
-void PIN_IRQ0_Handler(void)
-{
-  sl_gpio_clear_interrupts(PIN_INTR_0);
-}
-
-/*******************************************************************************
- *  This API handles GPIO pin interrupt 1 request
- ******************************************************************************/
-void PIN_IRQ1_Handler(void)
-{
-  sl_gpio_clear_interrupts(PIN_INTR_1);
-}
-
-/*******************************************************************************
- *  This API handles GPIO pin interrupt 2 request
- ******************************************************************************/
-void PIN_IRQ2_Handler(void)
-{
-  sl_gpio_clear_interrupts(PIN_INTR_2);
-}
-
-/*******************************************************************************
- *  This API handles GPIO pin interrupt 3 request
- ******************************************************************************/
-void PIN_IRQ3_Handler(void)
-{
-  sl_gpio_clear_interrupts(PIN_INTR_3);
-}
-
-/*******************************************************************************
- *  This API handles GPIO pin interrupt 4 request
- ******************************************************************************/
-void PIN_IRQ4_Handler(void)
-{
-  sl_gpio_clear_interrupts(PIN_INTR_4);
-}
-
-/*******************************************************************************
- *  This API handles GPIO pin interrupt 5 request
- ******************************************************************************/
-void PIN_IRQ5_Handler(void)
-{
-  sl_gpio_clear_interrupts(PIN_INTR_5);
-}
-
-/*******************************************************************************
- *  This API handles GPIO pin interrupt 6 request
- ******************************************************************************/
-void PIN_IRQ6_Handler(void)
-{
-  sl_gpio_clear_interrupts(PIN_INTR_6);
-}
-
-/*******************************************************************************
- *  This API handles GPIO pin interrupt 7 request
- ******************************************************************************/
-void PIN_IRQ7_Handler(void)
-{
-  sl_gpio_clear_interrupts(PIN_INTR_7);
-}
-/*******************************************************************************
- *  This API handles GPIO Group interrupt 0 request
- ******************************************************************************/
-void GRP_IRQ0_Handler(void)
-{
-  sl_si91x_gpio_clear_group_interrupt(GROUP_INT_1);
-}
-
-/*******************************************************************************
- *  This API handles GPIO Group interrupt 1 request
- ******************************************************************************/
-void GRP_IRQ1_Handler(void)
-{
-  sl_si91x_gpio_clear_group_interrupt(GROUP_INT_2);
-}
-
-/*******************************************************************************
- *  This API handles UULP GPIO pin interrupt 0 request
- ******************************************************************************/
-void UULP_PIN_IRQ_Handler(void)
-{
-  if ((sl_si91x_gpio_get_uulp_interrupt_status() & UULP_INTR_1) != UULP_MASK) {
-    sl_si91x_gpio_clear_uulp_interrupt(UULP_PIN_INTR_1);
-  }
-  if ((sl_si91x_gpio_get_uulp_interrupt_status() & UULP_INTR_2) != UULP_MASK) {
-    sl_si91x_gpio_clear_uulp_interrupt(UULP_PIN_INTR_2);
-  }
-  if ((sl_si91x_gpio_get_uulp_interrupt_status() & UULP_INTR_3) != UULP_MASK) {
-    sl_si91x_gpio_clear_uulp_interrupt(UULP_PIN_INTR_3);
-  }
-  if ((sl_si91x_gpio_get_uulp_interrupt_status() & UULP_INTR_4) != UULP_MASK) {
-    sl_si91x_gpio_clear_uulp_interrupt(UULP_PIN_INTR_4);
-  }
-  if ((sl_si91x_gpio_get_uulp_interrupt_status() & UULP_INTR_5) != UULP_MASK) {
-    sl_si91x_gpio_clear_uulp_interrupt(UULP_PIN_INTR_5);
-  }
-}
-
-/*******************************************************************************
- *  This API handles ULP GPIO OR'ed pin interrupt request
- ******************************************************************************/
-void ULP_PIN_IRQ_Handler(void)
-{
-  sl_si91x_gpio_clear_ulp_interrupt(ULP_PIN_INT);
-}
-
-/*******************************************************************************
- *  This API handles ULP GPIO group interrupt request
- ******************************************************************************/
-void ULP_GROUP_IRQ_Handler(void)
-{
-  sl_si91x_gpio_clear_ulp_group_interrupt(ULP_GROUP_INT);
 }

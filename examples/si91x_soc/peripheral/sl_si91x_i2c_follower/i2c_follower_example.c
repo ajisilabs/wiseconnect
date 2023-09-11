@@ -331,6 +331,7 @@ static void i2c_clock_init(I2C_TypeDef *i2c)
  ******************************************************************************/
 static void pin_configurations(void)
 {
+#ifndef SI917_RADIO_BOARD_V2
 #if (I2C_INSTANCE == 0)
   //SCL
   RSI_EGPIO_UlpPadReceiverEnable((uint8_t)(scl.pin - HP_MAX_GPIO));
@@ -351,6 +352,21 @@ static void pin_configurations(void)
 #if defined(ROM_BYPASS)
   // Configuring internal pullup for follower mode
   egpio_ulp_pad_driver_disable_state(ULP_GPIO_SDA, INTERNAL_PULLUP);
+#endif
+#endif
+#else
+  RSI_EGPIO_PadSelectionEnable(scl.pad_sel);
+  RSI_EGPIO_PadReceiverEnable(scl.pin);
+  RSI_EGPIO_SetPinMux(EGPIO, scl.port, scl.pin, scl.mode);
+#if defined(ROM_BYPASS)
+  egpio_pad_driver_disable_state(scl.pin, INTERNAL_PULLUP);
+#endif
+  //SDA
+  RSI_EGPIO_PadSelectionEnable(sda.pad_sel);
+  RSI_EGPIO_PadReceiverEnable(sda.pin);
+  RSI_EGPIO_SetPinMux(EGPIO, sda.port, sda.pin, sda.mode);
+#if defined(ROM_BYPASS)
+  egpio_pad_driver_disable_state(sda.pin, INTERNAL_PULLUP);
 #endif
 #endif // I2C_INSTANCE 0
 

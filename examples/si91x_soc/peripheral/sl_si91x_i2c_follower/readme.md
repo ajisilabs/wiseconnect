@@ -60,7 +60,7 @@
 ### Hardware Requirements
 
 - Windows PC
-- Silicon Labs [Si917 Evaluation Kit WSTK/WPK + BRD4325A]
+- Silicon Labs [Si917 Evaluation Kit WSTK/WPK + BRD4338A]
 
 ![Figure: Introduction](resources/readme/image506a.png)
 
@@ -69,6 +69,11 @@
 - Si91x SDK
 - Embedded Development Environment
   - For Silicon Labs Si91x, use the latest version of Simplicity Studio (refer **"Download and Install Simplicity Studio"** section in **getting-started-with-siwx917-soc** guide at **release_package/docs/index.html**)
+
+### VCOM Setup
+- The Docklight tool's setup instructions are provided below..
+
+![Figure: VCOM_setup](resources/readme/vcom.png)
 
 ## Project Setup
 
@@ -92,25 +97,31 @@
  #define I2C_INSTANCE    2    // I2C Instance for Pin configuration
  #define I2C             I2C2 // I2C Instance 
   ```
+Change the value of following macros in config/RTE_Device.h
+```c
+#define RTE_I2C0_SCL_PORT_ID 0  // SCL pin port id
+
+#define RTE_I2C0_SDA_PORT_ID 0  //SDA pin port id
+```
 ## Base Board Pin Configuration
 
 #### I2C0
-| PIN | ULP GPIO PIN               | Description                 |
+| PIN | 		ULP GPIO PIN       |	 	Description   		 |
 | --- | -------------------------- | --------------------------- |
-| SCL | ULP_GPIO_11 [EXP_HEADER-5] | Connect to Follower SCL pin |
-| SDA | ULP_GPIO_10 [EXP_HEADER-3] | Connect to Follower SDA pin |
+| SCL | 		GPIO_7 [P20] 	   | Connect to Leader SCL pin |
+| SDA | 		GPIO_6 [P19] 	   | Connect to Leader SDA pin |
 
 #### I2C1
-| PIN | GPIO PIN                 | Description                 |
+| PIN | 		GPIO PIN         | 			Description        |
 | --- | -------------------------| --------------------------- |
-| SCL | GPIO_50 [EXP_HEADER-P19] | Connect to Follower SCL pin |
-| SDA | GPIO_51 [EXP_HEADER-P20] | Connect to Follower SDA pin |
+| SCL | 		GPIO_50 [P32] 	 | Connect to Leader SCL pin |
+| SDA | 		GPIO_51 [P34] 	 | Connect to Leader SDA pin |
 
 #### I2C2
-| PIN | ULP GPIO PIN               | Description                 |
+| PIN | 		ULP GPIO PIN       | 		Description          |
 | --- | -------------------------- | --------------------------- |
-| SCL | ULP_GPIO_5 [EXP_HEADER-13] | Connect to Follower SCL pin |
-| SDA | ULP_GPIO_4 [EXP_HEADER-11] | Connect to Follower SDA pin |
+| SCL | ULP_GPIO_7 [EXP_HEADER-15] | Connect to Leader SCL pin |
+| SDA | ULP_GPIO_6 [EXP_HEADER-16] | Connect to Leader SDA pin |
 
 ![Figure: Pin Configuration I2C](resources/readme/image506d.png)
 
@@ -127,7 +138,7 @@
 ## Executing the Application
 
 1. Compile and run the application.
-2. Connect ULP_GPIO_11 and ULP_GPIO_10 with the leader device.
+2. Connect GPIO_6 and GPIO_7 with the leader device. in the case of I2C0.
 3. When the application runs, it receives and sends data.
 4. After the transfer is completed, it validates the data and prints on the console.
 

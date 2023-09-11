@@ -338,10 +338,12 @@ sl_status_t create_and_send_socket_request(int socketIdIndex, int type, int *bac
                                         wait_period,
                                         NULL,
                                         &buffer);
-
+  if ((status != SL_STATUS_OK) && (buffer != NULL)) {
+    sl_si91x_host_free_buffer(buffer, SL_WIFI_RX_FRAME_BUFFER);
+  }
+  VERIFY_STATUS_AND_RETURN(status);
   packet                 = sl_si91x_host_get_buffer_data(buffer, 0, NULL);
   socket_create_response = (sl_si91x_socket_create_response_t *)packet->data;
-  VERIFY_STATUS_AND_RETURN(status);
 
   si91x_bsd_socket->id = (socket_create_response->socket_id[0]) | (socket_create_response->socket_id[1] << 8);
   si91x_bsd_socket->local_address.sin6_port = socket_create_response->module_port[0]
@@ -408,6 +410,9 @@ int sli_si91x_shutdown(int socket, int how)
                                                NULL,
                                                &wait_period);
 
+  if ((status != SL_STATUS_OK) && (buffer != NULL)) {
+    sl_si91x_host_free_buffer(buffer, SL_WIFI_RX_FRAME_BUFFER);
+  }
   SOCKET_VERIFY_STATUS_AND_RETURN(status, SL_STATUS_OK, SI91X_UNDEFINED_ERROR);
 
   for (uint8_t index = 0; index < NUMBER_OF_SOCKETS; index++) {
@@ -420,6 +425,7 @@ int sli_si91x_shutdown(int socket, int how)
       reset_socket_state(index);
     }
   }
+  sl_si91x_host_free_buffer(buffer, SL_WIFI_RX_FRAME_BUFFER);
 
   return SI91X_NO_ERROR;
 }
@@ -462,6 +468,7 @@ sl_status_t si91x_socket_event_handler(sl_status_t status,
     }
   } else if (rx_packet->command == RSI_RECEIVE_RAW_DATA) {
     si91x_rsp_socket_recv_t *firmware_socket_response = (si91x_rsp_socket_recv_t *)rx_packet->data;
+    uint8_t *data                                     = (uint8_t *)(rx_packet->data + firmware_socket_response->offset);
 
     uint8_t host_socket = 0;
 
@@ -472,9 +479,7 @@ sl_status_t si91x_socket_event_handler(sl_status_t status,
     }
 
     si91x_socket_t *client_socket = get_si91x_socket(host_socket);
-    client_socket->recv_data_callback(host_socket,
-                                      (uint8_t *)(firmware_socket_response + firmware_socket_response->offset),
-                                      firmware_socket_response->length);
+    client_socket->recv_data_callback(host_socket, data, firmware_socket_response->length);
   } else if (rx_packet->command == RSI_WLAN_RSP_SELECT_REQUEST) {
     fd_set read_fd, write_fd, exception_fd;
 

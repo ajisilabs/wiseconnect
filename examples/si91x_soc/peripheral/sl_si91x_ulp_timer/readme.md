@@ -19,7 +19,7 @@
 
 ## About Example Code
 
-- \ref ulp_timer_example.c this example file demonstrates how to use ULP-timer to toggle onboard
+- \ref ulp_timer_example.c this example file demonstrates how to use an ULP-timer instance to toggle onboard
   LED at 1sec periodic rate.
 - In this example, first clock and timer are configured with default configurations values from UC through \ref sl_si91x_ulp_timer_init and \ref sl_si91x_ulp_timer_set_configuration APIs respectively
 - Then registers selected timer instance timeout callback and enabling its interrupt through \ref
@@ -66,7 +66,8 @@
 
 - Open **sl_si91x_ulp_timer.slcp** project file select **software component**tab and search for **ULP-Timer** in search bar.
 - Click on **timer0** and configure the ULP-timer instance as per configuration parameters given in wizard
-- Using configuration wizard one can create four timer instances like timer0, timer1, timer2, timer3.
+- For using any other timer instance user has to add that timer instance by clicking on **ULP Timer Instance** from configuration wizard and then clicking on **Add New Instance**
+- For creating timer instances write 'timer0', 'timer1', 'timer2' or 'timer3' on the wizard for respective instance and then click on **Done**
 - After creation of instances seperate configuration files are get generated in **config folder**.
 - If project built without selecting configurations, it will take default values from UC
 - Configure Clock and timer using following macros, defined in \ref sl_si91x_ulp_timer_inst_config.h file and update/modify following macros if required:
@@ -85,9 +86,9 @@
 - \ref SL_ULP_TIMER_MODE (periodic and oneshot), for possible values \ref ulp_timer_mode_t
 - \ref SL_ULP_TIMER_TYP (1-microseconds, 256-microseconds & down-counter), for possible values \ref ulp_timer_type_t
 - \ref SL_ULP_TIMER_DIRECTION (up & down), for possible values \ref ulp_timer_direction_t
-- Configure the following macro in ulp_timer_example.c file for updating or modifying timer match value (in seconds) :
-- \ref SL_TIMER_MATCH_VALUE as per clock source and timer-type selected
-- Update timer_match_value member of \ref ulp_timer_config_t structure variable before calling \ref sl_si91x_ulp_timer_set_configurations API, to change default match value to value \ref SL_TIMER_MATCH_VALUE.
+- Also configure following macros in ulp_timer_example.c file:
+- Update \ref ULP_TIMER_INSTANCE macro value to change the timer instance to be used for the application.
+- Update \ref SL_TIMER_MATCH_VALUE macro before calling \ref sl_si91x_ulp_timer_set_configurations API to change the timer match value, update this macro as per clock source and timer-type selected.
 - After configuring above macros, their values are passed to \ref ulp_timer_config_t structure type variable \ref sl_timer_handle which is used to configure timer using API-\ref sl_si91x_ulp_timer_set_configurations.
 
 ## Build

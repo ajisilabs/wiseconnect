@@ -9,7 +9,7 @@ quality: alpha
 sdk: {id: gecko_sdk, version: 4.3.1}
 sdk_extension:
   - id: wiseconnect3_sdk
-    version: 3.0.13
+    version: 0.0.0
 source:
   - path: app.c
   - path: main.c
@@ -17,27 +17,27 @@ source:
 include:
   - path:
     file_list:
-    - path: app.h
-    - path: sleeptimer.h
+      - path: app.h
+      - path: sleeptimer.h
 toolchain_settings: []
 component:
-- id: cmsis_common
-- id: sl_system
-- id: component_catalog
-- id: siwx917_soc
-  from: wiseconnect3_sdk
-- id: si91x_support
-  from: wiseconnect3_sdk
-- id: sleeptimer_sysrtc
-  from: wiseconnect3_sdk
-- id: sleeptimer
-- id: sl_siwx917_platform
-  from: wiseconnect3_sdk
-- id: sl_siwx917_systemcall
-  from: wiseconnect3_sdk
+  - id: sl_system
+  - id: sleeptimer_sysrtc
+    from: wiseconnect3_sdk
+  - id: si917_memory_default_config
+    from: wiseconnect3_sdk
+  - id: rsilib_userconfig
+    from: wiseconnect3_sdk
+  - id: rsilib_sysrtc
+    from: wiseconnect3_sdk
+  - id: romdriver_egpio
+    from: wiseconnect3_sdk
+  - id: rsilib_clock_update
+    from: wiseconnect3_sdk
+  - id: udma_linker_config
+    from: wiseconnect3_sdk
 define:
   - name: RSI_M4_INTERFACE
-  - name: SYSCALLS_WRITE
 provides:
   - name: si91x_soc
 other_file:
@@ -45,10 +45,11 @@ other_file:
   - path: resources/readme/image515b.png
   - path: resources/readme/image515c.png
   - path: resources/readme/image515d.PNG
+  - path: resources/readme/vcom.png
 readme:
   - path: readme.md
 ui_hints:
-  highlight: 
+  highlight:
     - path: readme.md
       focus: true
 post_build:

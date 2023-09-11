@@ -379,7 +379,6 @@ uint32_t sl_si91x_usart_get_rx_data_count(sl_usart_handle_t usart_handle);
 *
 * @param[in] usart_handle Pointer to the USART/UART driver
 * @param[in] control_configuration pointer to the USART configurations
-* @param[in] baud_rate baud rate to data transfer
 * @return status 0 if successful, else error code
 *        \ref SL_STATUS_BUSY (0x0004)         -  Busy ,already data transfer is going on \n
 *        \ref SL_STATUS_INVALID_PARAMETER (0x0021) - The parameter is invalid argument \n
@@ -388,8 +387,28 @@ uint32_t sl_si91x_usart_get_rx_data_count(sl_usart_handle_t usart_handle);
 *        \ref SL_STATUS _OK (0X000)     - Success ,UART/USART initialization done properly \n
 ******************************************************************************/
 sl_status_t sl_si91x_usart_set_configuration(sl_usart_handle_t usart_handle,
-                                             sl_si91x_usart_control_config_t *control_configuration,
-                                             uint32_t baud_rate);
+                                             sl_si91x_usart_control_config_t *control_configuration);
+
+/*******************************************************************************
+* @brief
+* This is internal function used to configure the different configurations of USART Interface, 
+* this api will not pick the configurations from USART UC.
+*
+* @details
+* This function configure the USART in different configurations such as USART mode,
+* Data Bits, Parity , stop bits, flow control and baud rate.
+*
+* @param[in] usart_handle Pointer to the USART/UART driver
+* @param[in] control_configuration pointer to the USART configurations
+* @return status 0 if successful, else error code
+*        \ref SL_STATUS_BUSY (0x0004)         -  Busy ,already data transfer is going on \n
+*        \ref SL_STATUS_INVALID_PARAMETER (0x0021) - The parameter is invalid argument \n
+*        \ref SL_STATUS_INVALID_MODE (0x0024) -  USART Invalid mode of operation \n
+*        \ref SL_STATUS_NOT_SUPPORTED(0x000F) -  Feature not supported \n
+*        \ref SL_STATUS _OK (0X000)     - Success ,UART/USART initialization done properly \n
+******************************************************************************/
+sl_status_t sli_si91x_usart_set_non_uc_configuration(sl_usart_handle_t usart_handle,
+                                                     sl_si91x_usart_control_config_t *control_configuration);
 
 /***************************************************************************/ /**
 * @brief

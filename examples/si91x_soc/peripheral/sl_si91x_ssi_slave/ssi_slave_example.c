@@ -34,7 +34,7 @@
 #define SOC_PLL_MM_COUNT_LIMIT  0xA4      // SOC PLL count limit
 #define SSI_BIT_WIDTH           8         // SSI bit width
 #define SSI_BAUDRATE            10000000  // SSI baudrate
-#define MAX_BIT_WIDTH           32        // Maximum Bit width
+#define MAX_BIT_WIDTH           16        // Maximum Bit width
 
 /*******************************************************************************
  **********************  Local Function prototypes   ***************************
@@ -279,11 +279,9 @@ static void compare_loopback_data(void)
     }
   }
   if (data_index == BUFFER_SIZE) {
-    DEBUGOUT("Data Comparison Success \n");
-    DEBUGOUT("Test Case Pass \n");
+    DEBUGOUT("Data comparison successful, Loop Back Test Passed \n");
   } else {
-    DEBUGOUT("Data Comparison Fail \n");
-    DEBUGOUT("Test Case Fail \n");
+    DEBUGOUT("Data comparison failed, Loop Back Test failed \n");
   }
 }
 

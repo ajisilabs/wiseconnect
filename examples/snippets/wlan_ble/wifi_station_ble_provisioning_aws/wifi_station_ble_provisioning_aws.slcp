@@ -4,17 +4,16 @@ quality: alpha
 label: wifi_station_ble_provisioning_aws
 category: Example|Wi-Fi_BLE
 description: >
-  This application explains how to connect to a Wi-Fi access point using BLE provisioning functionality
-  and then communicates with an AWS server using MQTT. Data will be continuously published until
-  the device is disconnected from the access point
+  This application explains how to connect to a Wi-Fi access point using BLE provisioning functionality and then communicates with an AWS server using MQTT. Data will be continuously published until the device is disconnected from the access point
+
 filter:
   - name: "Wireless Technology"
     value: ["WiFi BLE"]
   - name: "Project Difficulty"
     value: ["Intermediate"]
 sdk: {id: gecko_sdk, version: 4.3.1}
-sdk_extension: 
-- {id: wiseconnect3_sdk, version: 3.0.13}
+sdk_extension:
+  - {id: wiseconnect3_sdk, version: 0.0.0}
 source:
   - path: app.c
   - path: main.c
@@ -29,49 +28,50 @@ include:
       - path: wifi_config.h
       - path: i2c_leader_example.h
 define:
-  - name: SYSCALLS_WRITE
   - name: RSI_M4_INTERFACE
   - name: RSI_DEBUG_PRINTS
   - name: SI91X_SOCKET_FEATURE
 provides:
-- {name: si91x_soc}
+  - {name: si91x_soc}
+component:
+  - {from: wiseconnect3_sdk, id: si917_memory_default_config}
 requires:
-- name: sl_siwx917_platform
-- name: cmsis_common
-- name: component_catalog
-- name: siwx917_soc
-- name: si91x_support
-- name: sl_i2c
-- name: sl_system
-- name: aws_sdk
-- name: network_manager
-- name: basic_network_manager
-- name: si91x_support
-- name: wifi
-- name: si91x
-- name: sl_tls
-- name: ble
-- name: si91x_internal_stack
-- name: si91x_basic_buffers
-- name: wifi_resources
-- name: freertos
-- name: slist
-- name: socket
-- name: iostream_retarget_stdio
-  condition: [device_has_devinfo]
-- name: iostream_recommended_stream
-  condition: [device_has_devinfo]
-- name: iostream_stdlib_config
-  condition: [device_has_devinfo]
-- name: device_init
-  condition: [device_has_devinfo]
-- name: emlib_common
-  condition: [device_has_devinfo]
-- name: emlib_ldma
-  condition: [device_has_devinfo]
+  - name: sl_siwx917_platform
+  - name: cmsis_common
+  - name: component_catalog
+  - name: siwx917_soc
+  - name: si91x_support
+  - name: sl_i2c
+  - name: sl_system
+  - name: aws_sdk
+  - name: network_manager
+  - name: basic_network_manager
+  - name: si91x_support
+  - name: wifi
+  - name: si91x
+  - name: sl_tls
+  - name: ble
+  - name: si91x_internal_stack
+  - name: si91x_basic_buffers
+  - name: wifi_resources
+  - name: freertos
+  - name: slist
+  - name: socket
+  - name: iostream_retarget_stdio
+    condition: [device_has_devinfo]
+  - name: iostream_recommended_stream
+    condition: [device_has_devinfo]
+  - name: iostream_stdlib_config
+    condition: [device_has_devinfo]
+  - name: device_init
+    condition: [device_has_devinfo]
+  - name: emlib_common
+    condition: [device_has_devinfo]
+  - name: emlib_ldma
+    condition: [device_has_devinfo]
 toolchain_settings: []
 configuration:
-- {name: SL_BOARD_ENABLE_VCOM, value: '1'}
+  - {name: SL_BOARD_ENABLE_VCOM, value: '1'}
 readme:
   - path: readme.md
 other_file:
@@ -100,7 +100,7 @@ other_file:
   - path: resources/readme/serial_port_setup.png
   - path: resources/readme/socboarddetection111.png
   - path: resources/readme/usb_to_uart_1.png
-  - path: resources/readme/usb_to_uart_2.png   
+  - path: resources/readme/usb_to_uart_2.png
 ui_hints:
   highlight:
     - path: readme.md

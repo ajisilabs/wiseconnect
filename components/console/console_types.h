@@ -31,7 +31,10 @@ typedef sl_status_t (*console_handler_t)(console_args_t *arguments);
 typedef struct {
   const char *description;
   const char **argument_help;
-  console_handler_t handler;
+  union {
+    console_handler_t handler;
+    const void *sub_command_database;
+  };
   console_argument_type_t argument_list[];
 } console_descriptive_command_t;
 
@@ -66,8 +69,8 @@ typedef struct console_variable_node_s {
   union {
     // A node that points to another group of nodes
     struct {
-      uint32_t first_index;
-      uint32_t last_index;
+      void *table;
+      uint32_t table_size;
     } group;
 
     // A node that points to an object in memory

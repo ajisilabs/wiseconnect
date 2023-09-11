@@ -41,7 +41,7 @@
  ******************************************************************************/
 static uint16_t data_in[BUFFER_SIZE];
 static uint16_t data_out[BUFFER_SIZE];
-static division_factor                     = 1;
+static uint16_t division_factor            = 1;
 static sl_gspi_handle_t gspi_driver_handle = NULL;
 
 //Enum for different transmission scenarios
@@ -332,11 +332,11 @@ static void compare_loop_back_data(void)
   // The extra bits of the integer should be always zero.
   // For example, if bit width is 7, then from 8-15 all bits should be zero in a 16 bit integer.
   // So mask has value according to the data width and it is applied to the data.
-  uint16_t data_index  = 0;
-  uint8_t frame_length = 0;
-  uint16_t mask        = ~0;
-  frame_length         = sl_si91x_gspi_get_frame_length();
-  mask                 = mask >> (MAX_BIT_WIDTH - frame_length);
+  uint16_t data_index   = 0;
+  uint32_t frame_length = 0;
+  uint16_t mask         = (uint16_t)~0;
+  frame_length          = sl_si91x_gspi_get_frame_length();
+  mask                  = mask >> (MAX_BIT_WIDTH - frame_length);
   for (data_index = 0; data_index < BUFFER_SIZE; data_index++) {
     data_in[data_index] &= mask;
     data_out[data_index] &= mask;

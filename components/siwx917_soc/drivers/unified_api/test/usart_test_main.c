@@ -172,26 +172,26 @@ void test_usart_control(void)
   sl_si91x_usart_control_config_t usart_config;
 
   UnityPrintf("Testing with NULL pointer \n");
-  status = sl_si91x_usart_set_configuration(usart_handle, NULL, 115200);
+  status = sl_si91x_usart_set_configuration(usart_handle, NULL);
   TEST_ASSERT_EQUAL_HEX(SL_STATUS_NULL_POINTER, status);
   UnityPrintf("Status of API is correct, Null Pointer Test Passed successfully \n");
 
   UnityPrintf("Testing with false baud rate \n");
   usart_config.baudrate = MAX_BAUDRATE + 1;
-  status                = sl_si91x_usart_set_configuration(usart_handle, &usart_config, usart_config.baudrate);
+  status                = sl_si91x_usart_set_configuration(usart_handle, &usart_config);
   TEST_ASSERT_EQUAL_HEX(SL_STATUS_INVALID_PARAMETER, status);
   UnityPrintf("Status of API is correct, it returns expected error \n");
 
   UnityPrintf("Testing Asynchronous mode \n");
   usart_config.mode = SL_USART_MODE_ASYNCHRONOUS;
   default_usart_config_struct(&usart_config);
-  status = sl_si91x_usart_set_configuration(usart_handle, &usart_config, 115200);
+  status = sl_si91x_usart_set_configuration(usart_handle, &usart_config);
   TEST_ASSERT_EQUAL_HEX(SL_STATUS_OK, status);
   UnityPrintf("Status of API is correct, USART_MODE_ASYNCHRONOUS  is set successfully \n");
 
   UnityPrintf("Testing with all the correct parameters \n");
   default_usart_config_struct(&usart_config);
-  status = sl_si91x_usart_set_configuration(usart_handle, &usart_config, 115200);
+  status = sl_si91x_usart_set_configuration(usart_handle, &usart_config);
   TEST_ASSERT_EQUAL_HEX(SL_STATUS_OK, status);
   UnityPrintf("Status of API is correct, usart configurations are set successfully \n");
 

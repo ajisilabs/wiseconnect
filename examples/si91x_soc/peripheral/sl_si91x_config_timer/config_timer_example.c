@@ -34,7 +34,6 @@
 #include "rsi_board.h"
 #include "rsi_chip.h"
 #include "sl_si91x_config_timer.h"
-//#include "sl_si91x_config_timer_config.h"
 
 /*******************************************************************************
  ***************************  Defines / Macros  ********************************
@@ -64,7 +63,9 @@ sl_config_timer_pwm_callback_t pwm_callback;
 /*******************************************************************************
  **********************  Local Function prototypes   ***************************
  ******************************************************************************/
+#if (CT_PWM_MODE_USECASE == SET)
 static uint32_t CT_PercentageToTicks(uint8_t percent, uint32_t freq);
+#endif
 static void on_config_timer_callback(void *callback_flag);
 
 /*******************************************************************************
@@ -73,11 +74,13 @@ static void on_config_timer_callback(void *callback_flag);
 static sl_status_t status;
 static void *callback_flag_data;
 static uint32_t interrupt_count = ZERO_INITIAL_VALUE;
-static uint32_t delay           = ZERO_INITIAL_VALUE;
+#if (CT_PWM_MODE_USECASE == SET)
+static uint32_t delay = ZERO_INITIAL_VALUE;
 static int pwm_out_0, pwm_out_1, duty_p = ZERO_INITIAL_VALUE, incr = ONE, Led = ZERO_INITIAL_VALUE;
 static sl_config_timer_ocu_control_t ocu_params0;
 static sl_config_timer_ocu_control_t ocu_params1;
 static sl_config_timer_ocu_params_t vsOCUparams = { ZERO_INITIAL_VALUE };
+#endif
 static sl_config_timer_interrupt_flags_t ct_interrupt_flags;
 
 /*******************************************************************************
@@ -86,14 +89,32 @@ static sl_config_timer_interrupt_flags_t ct_interrupt_flags;
 void config_timer_example_init(void)
 {
   sl_config_timer_version_t version;
-  sl_config_timer_ocu_config_t ct_ocu_config;
   sl_config_timer_config_t ct_config;
+  // Initializing ct configuration structure
+  ct_config.is_counter_mode_32bit_enabled    = SL_COUNTER_16BIT;
+  ct_config.counter0_direction               = SL_COUNTER0_UP;
+  ct_config.is_counter0_periodic_enabled     = true;
+  ct_config.is_counter0_sync_trigger_enabled = true;
+  ct_config.counter1_direction               = SL_COUNTER0_UP;
+  ct_config.is_counter1_periodic_enabled     = true;
+  ct_config.is_counter1_sync_trigger_enabled = true;
   //Version information of watchdog-timer
   version = sl_si91x_config_timer_get_version();
   DEBUGOUT("Config-timer version is fetched successfully \n");
   DEBUGOUT("API version is %d.%d.%d\n", version.release, version.major, version.minor);
 #if (CT_PWM_MODE_USECASE == SET)
-  error_t error_status;
+  sl_config_timer_ocu_config_t ct_ocu_config;
+  // Initializing ct OCU configuration structure
+  ct_ocu_config.is_counter0_ocu_output_enabled         = true;
+  ct_ocu_config.is_counter1_ocu_output_enabled         = true;
+  ct_ocu_config.is_counter0_ocu_sync_enabled           = true;
+  ct_ocu_config.is_counter1_ocu_sync_enabled           = true;
+  ct_ocu_config.is_counter0_toggle_output_high_enabled = true;
+  ct_ocu_config.is_counter1_toggle_output_high_enabled = true;
+  ct_ocu_config.is_counter0_toggle_output_low_enabled  = true;
+  ct_ocu_config.is_counter1_toggle_output_low_enabled  = true;
+
+  rsi_error_t error_status;
   uint32_t match_value = ZERO_MATCH_VALUE;
   match_value          = SystemCoreClock / CT_RATE;
   do {
@@ -287,6 +308,7 @@ void config_timer_example_process_action(void)
 #endif
 }
 
+#if (CT_PWM_MODE_USECASE == SET)
 /* Converts duty cycle percentage to system ticks */
 static uint32_t CT_PercentageToTicks(uint8_t percent, uint32_t freq)
 {
@@ -299,6 +321,7 @@ static uint32_t CT_PercentageToTicks(uint8_t percent, uint32_t freq)
   } else
     return 0;
 }
+#endif
 
 // Remove all debugs from callback function for proper delays
 void on_config_timer_callback(void *callback_flag)

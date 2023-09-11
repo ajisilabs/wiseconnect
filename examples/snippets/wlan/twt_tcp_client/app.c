@@ -55,12 +55,13 @@
  *                    Constants
  ******************************************************/
 
-#define SERVER_IP         "192.168.1.13"
+#define SERVER_IP         "192.168.50.32"
 #define SERVER_PORT       5001
 #define NUMBER_OF_PACKETS 1000
 #define DATA              "hello from tcp client"
 #define TWT_SCAN_TIMEOUT  10000
 #define SEND_TCP_DATA     0
+#define TWT_AUTO_CONFIG   1
 
 #ifdef RSI_M4_INTERFACE
 #ifdef COMMON_FLASH_EN
@@ -81,6 +82,16 @@
   0x24061000 /*<!Bootloader RAM usage location upon wake up  */ // A0 Boards (common flash & Dual flash)
 #endif
 #endif
+
+// Use case based TWT selection params
+#define DEVICE_AVERAGE_THROUGHPUT            20000
+#define ESTIMATE_EXTRA_WAKE_DURATION_PERCENT 0
+#define TWT_TOLERABLE_DEVIATION              10
+#define TWT_DEFAULT_WAKE_INTERVAL_MS         1024     // in milli seconds
+#define TWT_DEFAULT_WAKE_DURATION_MS         8        // in milli seconds
+#define MAX_TX_AND_RX_LATENCY_LIMIT          22118400 // 6hrs in milli seconds
+#define MAX_BEACON_WAKE_UP_AFTER_SP \
+  2 // The number of beacons after the service period completion for which the module wakes up and listens for any pending RX.
 
 static const sl_wifi_device_configuration_t sl_wifi_twt_client_configuration = {
   .boot_option = LOAD_NWP_FW,
@@ -149,6 +160,20 @@ sl_wifi_twt_request_t default_twt_setup_configuration = {
   .req_type                = 1,
   .negotiation_type        = 0,
 };
+
+sl_wifi_twt_selection_t default_twt_selection_configuration = {
+  .twt_enable                            = 1,
+  .average_tx_throughput                 = 1000,
+  .tx_latency                            = 0,
+  .rx_latency                            = 5000,
+  .device_average_throughput             = DEVICE_AVERAGE_THROUGHPUT,
+  .estimated_extra_wake_duration_percent = ESTIMATE_EXTRA_WAKE_DURATION_PERCENT,
+  .twt_tolerable_deviation               = TWT_TOLERABLE_DEVIATION,
+  .default_wake_interval_ms              = TWT_DEFAULT_WAKE_INTERVAL_MS,
+  .default_minimum_wake_duration_ms      = TWT_DEFAULT_WAKE_DURATION_MS,
+  .beacon_wake_up_count_after_sp         = MAX_BEACON_WAKE_UP_AFTER_SP
+};
+
 volatile bool twt_results_complete   = false;
 volatile sl_status_t callback_status = SL_STATUS_OK;
 /******************************************************
@@ -237,8 +262,13 @@ sl_status_t set_twt(void)
 
   //! Set TWT Config
   sl_wifi_set_twt_config_callback(twt_callback_handler, NULL);
-  performance_profile.twt_request = default_twt_setup_configuration;
-  status                          = sl_wifi_enable_target_wake_time(&performance_profile.twt_request);
+  if (TWT_AUTO_CONFIG == 1) {
+    performance_profile.twt_selection = default_twt_selection_configuration;
+    status                            = sl_wifi_target_wake_time_auto_selection(&performance_profile.twt_selection);
+  } else {
+    performance_profile.twt_request = default_twt_setup_configuration;
+    status                          = sl_wifi_enable_target_wake_time(&performance_profile.twt_request);
+  }
   if (SL_STATUS_IN_PROGRESS == status) {
     const uint32_t start = osKernelGetTickCount();
 

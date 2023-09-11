@@ -138,7 +138,7 @@ static void application_start(void *argument)
 
   send_data_to_tcp_server();
 
-  printf("Example Demonistration completed\r\n");
+  printf("Example Demonstration completed\r\n");
 }
 
 void send_data_to_tcp_server()

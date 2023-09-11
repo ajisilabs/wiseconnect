@@ -202,7 +202,7 @@ uint16_t rsi_bt_get_proto_type(uint16_t rsp_type, rsi_bt_cb_t **bt_cb)
              || (rsp_type == RSI_BLE_SET_ADVERTISE_DATA)
              || ((rsp_type >= RSI_BLE_GET_LE_PING) && (rsp_type <= RSI_BLE_CMD_READ_RESP))
              || (rsp_type == RSI_BLE_SET_SCAN_RESPONSE_DATA)
-             || ((rsp_type >= RSI_BLE_LE_WHITE_LIST) && (rsp_type <= RSI_BLE_CBFC_DISCONN))
+             || ((rsp_type >= RSI_BLE_LE_ACCEPT_LIST) && (rsp_type <= RSI_BLE_CBFC_DISCONN))
              || ((rsp_type >= RSI_BLE_LE_LTK_REQ_REPLY) && (rsp_type <= RSI_BLE_PER_RX_MODE))
              || (rsp_type == RSI_BLE_CMD_ATT_ERROR) || (rsp_type == RSI_BLE_CMD_SET_BLE_TX_POWER)
              || (rsp_type == RSI_BLE_CMD_INDICATE_SYNC) || (rsp_type == RSI_BLE_CMD_AE)
@@ -362,7 +362,7 @@ uint32_t rsi_bt_get_status(rsi_bt_cb_t *bt_cb)
 }
 
 /**
- * @brief       Update local Device buffer availability per slave in global ble cb structure
+ * @brief       Update local Device buffer availability per peripheral in global ble cb structure
  * @param[in]   void
  * @return      void
  *
@@ -1850,8 +1850,8 @@ uint16_t rsi_bt_prepare_le_pkt(uint16_t cmd_type, void *cmd_struct, sl_si91x_pac
       memcpy(pkt->data, cmd_struct, payload_size);
     } break;
 
-    case RSI_BLE_LE_WHITE_LIST: {
-      payload_size = sizeof(rsi_ble_white_list_t);
+    case RSI_BLE_LE_ACCEPT_LIST: {
+      payload_size = sizeof(rsi_ble_accept_list_t);
       memcpy(pkt->data, cmd_struct, payload_size);
     } break;
 

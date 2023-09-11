@@ -5,12 +5,26 @@
 #include "sli_siwx917_soc.h"
 #include "rsi_board.h"
 #include "cmsis_os2.h"
+#if defined SL_UART
+#include "sl_uart.h"
+#include "sl_board_configuration.h"
 
+#ifndef SL_UART_BAUDRATE
+#define SL_UART_BAUDRATE    115200
+#endif
+#endif
+
+extern void sl_si91x_hardware_setup(void);
 void sl_platform_init(void)
 {
   SystemCoreClockUpdate();
   sli_si91x_platform_init();
+#if defined SL_UART
+  sl_uart_init(DEFAULT_UART, SL_UART_BAUDRATE, DEFAULT_UART_PIN_CONFIG);
+#else
   RSI_Board_Init();
+#endif
+  sl_si91x_hardware_setup();
   osKernelInitialize();
 }
 
@@ -27,10 +41,14 @@ void sl_service_init(void)
 #include "sl_board_control.h"
 #include "sl_uart.h"
 
+#ifndef SL_UART_BAUDRATE
+#define SL_UART_BAUDRATE    115200
+#endif
+
 void sl_service_init(void)
 {
   sl_board_enable_vcom();
-  sl_uart_init(DEFAULT_UART, 115200, DEFAULT_UART_PIN_CONFIG);
+  sl_uart_init(DEFAULT_UART, SL_UART_BAUDRATE, DEFAULT_UART_PIN_CONFIG);
 }
 {%endif%}
 

@@ -42,27 +42,109 @@ Silicon Labs [BRD4325A, BRD4325B, BRD4325C, BRD4325G, BRD4338A](https://www.sila
 
 > This example application supports Bare metal and FreeRTOS configurations.
 
-## 3 Set up
+### 2.3 Setup Diagram
 
-#### 3.1 SoC Mode
+#### SoC Mode  
 
 The picture below illustrates the EAP frame exchanges between SiWx91x, Access Point and FreeRADIUS Server.
 
 **![Figure: Setup Diagram for Enterprise Client soc Example](resources/readme/eap_exchanges.png)**
 
 Set up diagram for SoC mode:
-
 **![Figure: Setup Diagram for Enterprise Client soc Example](resources/readme/setup_soc.png)**
+
+#### NCP Mode  
 
 #### 3.2 NCP Mode
 
 **![Figure: Setup Diagram for Enterprise Client ncp Example](resources/readme/setup_ncp.png)**
 
-Follow the [Getting Started with Wiseconnect3 SDK](https://docs.silabs.com/wiseconnect/latest/wiseconnect-getting-started/) guide to set up the hardware connections and Simplicity Studio IDE.
-
 **NOTE**:
 
 - The Host MCU platform (EFR32MG21) and the SiWx91x interact with each other through the SPI interface.
+
+Follow the [Getting Started with Wiseconnect3 SDK](https://docs.silabs.com/wiseconnect/latest/wiseconnect-getting-started/) guide to set up the hardware connections and Simplicity Studio IDE.
+
+
+## 3 Project Environment
+
+- Ensure the SiWx91x loaded with the latest firmware following the [Upgrade Si91x firmware](https://docs.silabs.com/wiseconnect/latest/wiseconnect-getting-started/getting-started-with-soc-mode#upgrade-si-wx91x-connectivity-firmware)
+
+- Ensure the latest Gecko SDK along with the extension WiSeConnect3 is added to Simplicity Studio.
+
+### 3.1 Creating the project
+
+#### 3.1.1 SoC mode
+
+- Ensure the SiWx91x set up is connected to your PC.
+
+- In the Simplicity Studio IDE, the SiWx91x SoC board will be detected under **Debug Adapters** pane as shown below.
+
+  **![Soc Board detection](resources/readme/soc_board_detection.png)**
+
+#### 3.1.2 NCP mode
+
+- Ensure the EFx32 and SiWx91x set up is connected to your PC.
+
+- In the Simplicity Studio IDE, the EFR32 board will be detected under **Debug Adapters** pane as shown below.
+
+  **![EFR32 Board detection](resources/readme/efr32.png)**
+
+### 3.2 Importing the project
+
+- Studio should detect your board. Your board will be shown here. Click on the board detected and go to **EXAMPLE PROJECTS & DEMOS** section 
+
+#### SOC Mode
+
+- Select **Wi-Fi - Enterprise Client Mode** test application
+
+  **![project_selection](resources/readme/select_project_soc.png)**
+
+- Click 'Create'. The "New Project Wizard" window appears. Click 'Finish'
+
+  **![creation_final](resources/readme/create_project_soc.png)**
+
+### 3.3 Set up for application prints
+
+#### 3.3.1 Teraterm set up - for BRD4325A, BRD4325B, BRD4325C, BRD4325G
+
+You can use either of the below USB to UART converters for application prints.
+
+1. Set up using USB to UART converter board.
+
+   - Connect Tx (Pin-6) to P27 on WSTK
+   - Connect GND (Pin 8 or 10) to GND on WSTK
+
+   **![FTDI_prints](resources/readme/usb_to_uart_1.png)**
+
+2. Set up using USB to UART converter cable.
+
+   - Connect RX (Pin 5) of TTL convertor to P27 on WSTK
+   - Connect GND (Pin1) of TTL convertor to GND on WSTK
+
+   **![FTDI_prints](resources/readme/usb_to_uart_2.png)**
+
+3. Open the Teraterm tool.
+
+   - For SoC mode, choose the serial port to which USB to UART converter is connected and click on **OK**.
+
+     **![port_selection_soc](resources/readme/port_selection_soc.png)**
+
+**Note:** For Other 917 SoC boards please refer section #3.3.2
+
+#### 3.3.2 **Teraterm set up - for NCP and SoC modes**
+
+1. Open the Teraterm tool.
+
+- choose the J-Link port and click on **OK**.
+    
+    **![J-link - NCP](resources/readme/port_selection.png)**
+
+2. Navigate to the Setup → Serial port and update the baud rate to **115200** and click on **OK**.
+
+    **![serial_port_setup](resources/readme/serial_port_setup.png)**
+
+    **![serial_port](resources/readme/serial_port.png)**
 
 ## 4 Application Build Environment
 

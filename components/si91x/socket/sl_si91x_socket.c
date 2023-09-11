@@ -505,7 +505,7 @@ int sl_si91x_recvfrom(int socket,
   ssize_t bytes_read                 = 0;
   si91x_rsp_socket_recv_t *response  = NULL;
   si91x_socket_t *si91x_socket       = get_si91x_socket(socket);
-  sl_wifi_buffer_t *buffer;
+  sl_wifi_buffer_t *buffer           = NULL;
 
   SET_ERRNO_AND_RETURN_IF_TRUE(si91x_socket == NULL, EBADF);
   SET_ERRNO_AND_RETURN_IF_TRUE(si91x_socket->type == SOCK_STREAM && si91x_socket->state != CONNECTED, ENOTCONN);
@@ -541,7 +541,9 @@ int sl_si91x_recvfrom(int socket,
                                                            (void *)&response,
                                                            &event,
                                                            &wait_time);
-
+  if ((status != SL_STATUS_OK) && (buffer != NULL)) {
+    sl_si91x_host_free_buffer(buffer, SL_WIFI_RX_FRAME_BUFFER);
+  }
   SOCKET_VERIFY_STATUS_AND_RETURN(status, SL_STATUS_OK, SI91X_UNDEFINED_ERROR)
 
   bytes_read = (response->length <= buf_len) ? response->length : buf_len;

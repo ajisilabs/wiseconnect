@@ -19,6 +19,7 @@
 #include "sl_sleeptimer_config.h"
 #include "app.h"
 #include "rsi_board.h"
+#include "sleeptimer.h"
 
 #define TOOGLE_DELAY_MS1_ONESHOT  160000 //sleeptimer1 oneshot timeout in ticks
 #define TOOGLE_DELAY_MS1_PERIODIC 400    //sleeptimer1 periodic timeout in ms

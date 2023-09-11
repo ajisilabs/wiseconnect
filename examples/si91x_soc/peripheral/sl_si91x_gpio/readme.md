@@ -21,7 +21,7 @@ NOTE: Please note that GPIO_n (n=0:5) are dedicated for the Secure Zone Processo
 ### Hardware Requirements
 
 - Windows PC
-- Silicon Labs [Si917 Evaluation Kit WSTK/WPK + BRD4325A]
+- Silicon Labs [Si917 Evaluation Kit WSTK/WPK + BRD4338A]
 
 ![Figure: Introduction](resources/readme/image504a.png)
 
@@ -80,6 +80,11 @@ NOTE : GPIO UULP instance have port-4.
 ## Project Setup
 
 - **Silicon Labs Si91x** refer **"Download SDK"** section in **getting-started-with-siwx917-soc** guide at **release_package/docs/index.html** to work with Si91x and Simplicity Studio
+
+### VCOM Setup
+- The Docklight tool's setup instructions are provided below..
+
+![Figure: VCOM_setup](resources/readme/vcom.png)
 
 ## Loading Application on Simplicity Studio
 

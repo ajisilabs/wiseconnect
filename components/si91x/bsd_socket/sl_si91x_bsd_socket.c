@@ -257,6 +257,9 @@ int accept(int socket_id, struct sockaddr *addr, socklen_t *addr_len)
 
   if (status != SL_STATUS_OK) {
     close(client_socket_id);
+    if (buffer != NULL) {
+      sl_si91x_host_free_buffer(buffer, SL_WIFI_RX_FRAME_BUFFER);
+    }
     SET_ERROR_AND_RETURN(SI91X_UNDEFINED_ERROR);
   }
 
@@ -279,6 +282,9 @@ int accept(int socket_id, struct sockaddr *addr, socklen_t *addr_len)
   }
 
   if (addr_len == NULL || *addr_len <= 0) {
+    if (buffer != NULL) {
+      sl_si91x_host_free_buffer(buffer, SL_WIFI_RX_FRAME_BUFFER);
+    }
     return client_socket_id;
   }
 
@@ -289,6 +295,9 @@ int accept(int socket_id, struct sockaddr *addr, socklen_t *addr_len)
   *addr_len = si91x_client_socket->local_address.sin6_family == AF_INET ? sizeof(struct sockaddr_in)
                                                                         : sizeof(struct sockaddr_in6);
 
+  if (buffer != NULL) {
+    sl_si91x_host_free_buffer(buffer, SL_WIFI_RX_FRAME_BUFFER);
+  }
   return client_socket_id;
 }
 
@@ -443,7 +452,7 @@ ssize_t recvfrom(int socket_id, void *buf, size_t buf_len, int flags, struct soc
   si91x_rsp_socket_recv_t *response  = NULL;
   si91x_socket_t *si91x_socket       = get_si91x_socket(socket_id);
 
-  sl_wifi_buffer_t *buffer;
+  sl_wifi_buffer_t *buffer = NULL;
 
   SET_ERRNO_AND_RETURN_IF_TRUE(si91x_socket == NULL, EBADF);
   SET_ERRNO_AND_RETURN_IF_TRUE(si91x_socket->type == SOCK_STREAM && si91x_socket->state != CONNECTED, ENOTCONN);
@@ -482,6 +491,9 @@ ssize_t recvfrom(int socket_id, void *buf, size_t buf_len, int flags, struct soc
                                                &event,
                                                &wait_time);
 
+  if ((status != SL_STATUS_OK) && (buffer != NULL)) {
+    sl_si91x_host_free_buffer(buffer, SL_WIFI_RX_FRAME_BUFFER);
+  }
   SOCKET_VERIFY_STATUS_AND_RETURN(status, SL_STATUS_OK, SI91X_UNDEFINED_ERROR);
 
   bytes_read = (response->length <= buf_len) ? response->length : buf_len;
@@ -832,7 +844,9 @@ int select(int nfds, fd_set *readfds, fd_set *writefds, fd_set *exceptfds, struc
                                         wait_time,
                                         NULL,
                                         &buffer);
-
+  if ((status != SL_STATUS_OK) && (buffer != NULL)) {
+    sl_si91x_host_free_buffer(buffer, SL_WIFI_RX_FRAME_BUFFER);
+  }
   SOCKET_VERIFY_STATUS_AND_RETURN(status, SL_STATUS_OK, SI91X_UNDEFINED_ERROR);
 
   packet   = sl_si91x_host_get_buffer_data(buffer, 0, NULL);

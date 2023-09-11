@@ -42,82 +42,83 @@ Follow the [Getting Started with Wiseconnect3 SDK](https://docs.silabs.com/wisec
 
 ## 3 Project Environment
 
-1. Ensure the SiWx91x loaded with the latest firmware following the [Upgrade Si91x firmware](https://docs.silabs.com/wiseconnect/latest/wiseconnect-getting-started/getting-started-with-soc-mode#upgrade-si-wx91x-connectivity-firmware)
+- Ensure the SiWx91x loaded with the latest firmware following the [Upgrade Si91x firmware](https://docs.silabs.com/wiseconnect/latest/wiseconnect-getting-started/getting-started-with-soc-mode#upgrade-si-wx91x-connectivity-firmware)
 
-2. Ensure the EFx32 and SiWx91x set up is connected to your PC.
+- Ensure the latest Gecko SDK along with the extension WiSeConnect3 is added to Simplicity Studio.
 
-3. Ensure the latest Gecko SDK along with the extension Si917 COMBO SDK is added to Simplicity Studio.
+### 3.1 Creating the project
 
-### 3.1 Creating the Project
+#### 3.1.1 SoC mode
 
-#### 3.1.1 SoC Mode
-
-1. Ensure the SiWx91x setup is connected to your PC.
+- Ensure the SiWx91x set up is connected to your PC.
 
 - In the Simplicity Studio IDE, the SiWx91x SoC board will be detected under **Debug Adapters** pane as shown below.
 
-   ![Soc Board detection](resources/readme/socboarddetection111.png)
+  **![Soc Board detection](resources/readme/socboarddetection111.png)**
 
-- Studio should detect your board. Your board will be shown here. Click on the board detected and go to **EXAMPLE PROJECTS & DEMOS** section.  
+#### 3.1.2 NCP mode
 
-- Filter for Bluetooth examples from the Gecko SDK added. For this, check the *Bluetooth* checkbox under **Wireless Technology** and select *BLE - Power Save* application.
-
-   ![project_selection](resources/readme/create_project1.png)
-
-- Click 'Create'. The "New Project Wizard" window appears. Click 'Finish'
-
-  ![creation_final](resources/readme/create_project2.png)
-
-#### 3.1.2 NCP Mode
-
-1. Ensure the EFx32 and SiWx91x setup is connected to your PC.
+- Ensure the EFx32 and SiWx91x set up is connected to your PC.
 
 - In the Simplicity Studio IDE, the EFR32 board will be detected under **Debug Adapters** pane as shown below.
 
-   ![EFR32 Board detection](resources/readme/efr32.png)
+  **![EFR32 Board detection](resources/readme/efr32.png)**
 
-- Ensure the latest Gecko SDK along with the WiSeConnect 3 extension is added to Simplicity Studio.
+### 3.2 Importing the project
 
-- Go to the 'EXAMPLE PROJECT & DEMOS' tab and select *BLE - Power Save* application.
+- Studio should detect your board. Your board will be shown here. Click on the board detected and go to **EXAMPLE PROJECTS & DEMOS** section 
 
-- Click 'Create'. The "New Project Wizard" window appears. Click 'Finish'.
+#### SOC Mode
 
-  ![creation_final](resources/readme/create_project2.png)
+- Select **BLE - Power Save** test application
 
-### 3.3 Setup for Application Prints
+  **![project_selection](resources/readme/create_project1.png)**
+
+- Click 'Create'. The "New Project Wizard" window appears. Click 'Finish'
+
+  **![creation_final](resources/readme/create_project2.png)**
+
+### 3.3 Set up for application prints
+
+#### 3.3.1 Teraterm set up - for BRD4325A, BRD4325B, BRD4325C, BRD4325G
 
 You can use either of the below USB to UART converters for application prints.
 
 1. Set up using USB to UART converter board.
 
-    - Connect Tx (Pin-6) to P27 on WSTK
-    - Connect GND (Pin 8 or 10) to GND on WSTK
+   - Connect Tx (Pin-6) to P27 on WSTK
+   - Connect GND (Pin 8 or 10) to GND on WSTK
 
-      ![FTDI_prints](resources/readme/usb_to_uart_1.png)
+   **![FTDI_prints](resources/readme/usb_to_uart_1.png)**
 
-2. Setup using USB to UART converter cable.
+2. Set up using USB to UART converter cable.
 
-    - Connect RX (Pin 5) of TTL convertor to P27 on WSTK
-    - Connect GND (Pin1) of TTL convertor to GND on WSTK
+   - Connect RX (Pin 5) of TTL convertor to P27 on WSTK
+   - Connect GND (Pin1) of TTL convertor to GND on WSTK
 
-      ![FTDI_prints](resources/readme/usb_to_uart_2.png)
+   **![FTDI_prints](resources/readme/usb_to_uart_2.png)**
 
-**Tera term setup - for NCP and SoC modes**
+3. Open the Teraterm tool.
 
-1. Open the Tera Term tool.
    - For SoC mode, choose the serial port to which USB to UART converter is connected and click on **OK**.
 
-     **![](resources/readme/port_selection_soc.png)**
+     **![port_selection_soc](resources/readme/port_selection_soc.png)**
 
-   - For NCP mode, choose the J-Link port and click on **OK**.
+**Note:** For Other 917 SoC boards please refer section #3.3.2
 
-     **![](resources/readme/port_selection.png)**
+#### 3.3.2 **Teraterm set up - for NCP and SoC modes**
+
+1. Open the Teraterm tool.
+
+- choose the J-Link port and click on **OK**.
+    
+    **![J-link - NCP](resources/readme/port_selection.png)**
 
 2. Navigate to the Setup → Serial port and update the baud rate to **115200** and click on **OK**.
 
-   **![](resources/readme/serial_port_setup.png)**
+    **![serial_port_setup](resources/readme/serial_port_setup.png)**
 
-   **![](resources/readme/serial_port.png)**
+    **![serial_port](resources/readme/serial_port.png)**
 
 ## 4 Application Build Environment
 
@@ -183,16 +184,6 @@ The application can be configured to suit your requirements and development envi
    #define RSI_APP_EVENT_DISCONNECTED           2
    ```
 
-   **Opermode command parameters**
-
-   ```c
-   #define RSI_FEATURE_BIT_MAP                  FEAT_SECURITY_OPEN
-   #define RSI_TCP_IP_BYPASS                    RSI_DISABLE
-   #define RSI_TCP_IP_FEATURE_BIT_MAP           TCP_IP_FEAT_DHCPV4_CLIENT
-   #define RSI_CUSTOM_FEATURE_BIT_MAP           FEAT_CUSTOM_FEAT_EXTENTION_VALID
-   #define RSI_EXT_CUSTOM_FEATURE_BIT_MAP       (EXT_FEAT_XTAL_CLK_ENABLE | EXT_FEAT_LOW_POWER_MODE)
-   ```
-
    > **Note:**
  > If no memory configuration is specified, it will take EXT_FEAT_384K_MODE by default.
 
@@ -219,6 +210,7 @@ The application can be configured to suit your requirements and development envi
    ```c
    #define RSI_SELECT_LP_OR_ULP_MODE            RSI_ULP_WITH_RAM_RET
    ```
+**Note:** "Opermode command parameters" are set with desired configuration in app.c.
 
 ### 4.2 Build the Application
 

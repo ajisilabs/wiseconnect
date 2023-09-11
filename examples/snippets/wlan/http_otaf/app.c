@@ -42,8 +42,9 @@
 #include "aws_starfield_ca.pem.h"
 #include "cacert.pem.h"
 
-// WDT includes
-#include "sl_si91x_watchdog_timer.h"
+#ifdef RSI_M4_INTERFACE
+#include "sl_si91x_hal_soc_soft_reset.h"
+#endif
 
 /******************************************************
  *                      Macros
@@ -147,11 +148,6 @@ char *hostname = HTTP_HOSTNAME;
 #define PASSWORD             "admin"
 #endif
 
-// WDT constants
-#define SL_WDT_INTERRUPT_TIME    0 // WDT Interrupt Time
-#define SL_WDT_SYSTEM_RESET_TIME 1 // WDT System Reset Time
-#define SL_WDT_WINDOW_TIME       0 // WDT Window Time
-
 /******************************************************
  *               Variable Definitions
  ******************************************************/
@@ -198,7 +194,6 @@ static const sl_wifi_device_configuration_t station_init_configuration = {
 
 volatile bool response               = false;
 volatile sl_status_t callback_status = SL_STATUS_OK;
-static bool wdt_system_reset_flag    = false;
 
 /******************************************************
  *               Function Declarations
@@ -217,64 +212,6 @@ void watchdog_timer_init(void);
 /******************************************************
  *               Function Definitions
  ******************************************************/
-
-void watchdog_timer_init(void)
-{
-  sl_status_t status;
-  sl_watchdog_timer_version_t version;
-  watchdog_timer_clock_config_t wdt_clock_config;
-  wdt_clock_config.low_freq_fsm_clock_src  = KHZ_RC_CLK_SEL;
-  wdt_clock_config.high_freq_fsm_clock_src = FSM_32MHZ_RC;
-  wdt_clock_config.bg_pmu_clock_source     = RO_32KHZ_CLOCK;
-  watchdog_timer_config_t wdt_config;
-  wdt_config.interrupt_time    = SL_WDT_INTERRUPT_TIME;
-  wdt_config.system_reset_time = SL_WDT_SYSTEM_RESET_TIME;
-  wdt_config.window_time       = SL_WDT_WINDOW_TIME;
-
-  // Checking system-reset status if true means system-reset done by watchdog-timer
-  // else it is a power-on system-reset.
-  if (sl_si91x_watchdog_get_timer_system_reset_status()) {
-    // Assigning TRUE to system-reset flag, if reset done by watchdog-timer
-    wdt_system_reset_flag = true;
-    SL_DEBUG_LOG("Watchdog-timer system-reset occurred \r\n");
-  } else {
-    SL_DEBUG_LOG("Power on system-reset occurred..\r\n");
-  }
-  do {
-    //Version information of watchdog-timer
-    version = sl_si91x_watchdog_get_version();
-    SL_DEBUG_LOG("Watchdog-timer version is fetched successfully \n");
-    SL_DEBUG_LOG("API version is %d.%d.%d\n", version.release, version.major, version.minor);
-    // Initializing watchdog-timer
-    sl_si91x_watchdog_init_timer();
-    printf("\r\nSoC soft reset initiated\r\n");
-    SL_DEBUG_LOG("Successfully initialized watchdog-timer \n");
-    // Configuring watchdog-timer
-    status = sl_si91x_watchdog_configure_clock(&wdt_clock_config);
-    if (status != SL_STATUS_OK) {
-      SL_DEBUG_LOG("sl_si91x_watchdog_timer_config : Invalid Parameters, Error Code : %lu \n", status);
-      break;
-    }
-    SL_DEBUG_LOG("Successfully Configured watchdog-timer with default clock sources\n");
-    // Configuring watchdog-timer
-    status = sl_si91x_watchdog_set_configuration(&wdt_config);
-    if (status != SL_STATUS_OK) {
-      SL_DEBUG_LOG("sl_si91x_watchdog_timer_config : Invalid Parameters, Error Code : %lu \n", status);
-      break;
-    }
-    SL_DEBUG_LOG("Successfully Configured watchdog-timer with default parameters\n");
-    // Registering timeout callback
-    status = sl_si91x_watchdog_register_timeout_callback(on_timeout_callback);
-    if (status != SL_STATUS_OK) {
-      SL_DEBUG_LOG("sl_si91x_watchdog_timer_register_timeout_callback : Invalid Parameters, Error Code : %lu \n",
-                   status);
-      break;
-    }
-    // Starting watchdog-timer with changed parameters
-    sl_si91x_watchdog_start_timer();
-    SL_DEBUG_LOG("Successfully started watchdog-timer with new parameters \n");
-  } while (false);
-}
 
 void soft_reset(void)
 {
@@ -471,7 +408,8 @@ sl_status_t http_otaf_app()
   VERIFY_STATUS_AND_RETURN(status);
   printf("\r\nFirmware version after update: %s\r\n", version.version);
 #else
-  soft_reset();
+  printf("\r\nSoC Soft Reset initiated!\r\n");
+  sl_si91x_soc_soft_reset();
 #endif
 
   return status;

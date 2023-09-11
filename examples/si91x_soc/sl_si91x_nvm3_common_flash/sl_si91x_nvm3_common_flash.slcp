@@ -3,16 +3,15 @@ package: wifi
 quality: alpha
 label: sl_si91x_nvm3_common_flash
 category: Example|Service
-description: >
-  Testing NVM3 in Si91x common flash 
+description: "Testing NVM3 in Si91x common flash \n"
 filter:
   - name: "Wireless Technology"
     value: ["Wi-Fi"]
   - name: "Project Difficulty"
     value: ["Beginner"]
 sdk: {id: gecko_sdk, version: 4.3.1}
-sdk_extension: 
-- {id: wiseconnect3_sdk, version: 3.0.13}
+sdk_extension:
+  - {id: wiseconnect3_sdk, version: 0.0.0}
 source:
   - path: app.c
   - path: main.c
@@ -21,25 +20,17 @@ include:
     file_list:
       - path: app.h
 define:
-  - name: SYSCALLS_WRITE
   - name: RSI_DEBUG_PRINTS
+  - name: RSI_M4_INTERFACE
 requires:
-- name: sl_system
-- name: network_manager
-- name: basic_network_manager
-- name: si91x_support
-- name: wifi
-- name: si91x
-- name: sl_tls
-- name: si91x_internal_stack
-- name: si91x_basic_buffers
-- name: wifi_resources
-- name: sl_si91x_common_flash_nvm3
-- name: freertos
-- name: slist
+  - name: sl_system
+  - name: sl_si91x_common_flash_nvm3
+  - name: slist
+  - name: si917_memory_default_config
+  - name: rsilib_userconfig
 toolchain_settings: []
 configuration:
-- {name: SL_BOARD_ENABLE_VCOM, value: '1'}
+  - {name: SL_BOARD_ENABLE_VCOM, value: '1'}
 readme:
   - path: readme.md
 ui_hints:
@@ -48,4 +39,3 @@ ui_hints:
       focus: true
 post_build:
   path: ../../../utilities/postbuild_profile/wiseconnect_soc.slpb
-

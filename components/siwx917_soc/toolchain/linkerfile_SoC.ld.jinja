@@ -79,9 +79,11 @@
   {%- set udma_buffer = udma_buffer | sum %}
   {%- set app_ram_size = app_ram_size - udma_buffer %}
   {%- set udma0_start_addr = app_ram_size %}
+  {%- set udma1_start_addr = udma1_start_addr -  udma_buffer%}
 {%- endif %}
+
 {%- if psram_present %}	
-	{%- set app_psram_size = psram_size %}
+	{%- set app_psram_size = app_psram_end - app_psram_start %}
 {%- endif %}
 
 {%- set rtt = 0 %}
@@ -197,7 +199,11 @@ SECTIONS
 			{% endif %}
 	{% endif %} 
 	
+	{%- if psram_present and psram_linker_config_enabled %} 	
+	.data . :
+	{%- else %}
 	.data :
+	{% endif %}
 	{
 		__data_start__ = .;
 		
@@ -271,6 +277,9 @@ SECTIONS
 	{%- if psram_present and data_segment_in_psram and not text_segment_in_psram %}
 		_last_psram_location = .;
 	} > psram	AT> rom
+	{%- elif psram_present and data_segment_in_psram and text_segment_in_psram %}
+		_last_psram_location = .;
+	} > psram
 	{%- elif psram_present and text_segment_in_psram %}	
 		_last_ram_location = .;	
 	} > ram AT> psram
@@ -289,7 +298,7 @@ SECTIONS
 			{% endif %} 
 	{% endif %}	
 	
-	.bss :
+	.bss (NOLOAD) :
 	{
 		. = ALIGN(4);
 		__bss_start__ = .;

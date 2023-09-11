@@ -502,8 +502,7 @@ uint32_t sl_si91x_usart_get_rx_data_count(sl_usart_handle_t usart_handle)
  * lines before this API
  ********************************************************************************/
 sl_status_t sl_si91x_usart_set_configuration(sl_usart_handle_t usart_handle,
-                                             sl_si91x_usart_control_config_t *control_configuration,
-                                             uint32_t baud_rate)
+                                             sl_si91x_usart_control_config_t *control_configuration)
 {
   sl_status_t status;
   int32_t error_status;
@@ -515,7 +514,6 @@ sl_status_t sl_si91x_usart_set_configuration(sl_usart_handle_t usart_handle,
    */
 #ifdef USART_UC
   control_configuration = &usart_configuration;
-  baud_rate             = usart_configuration.baudrate;
 #endif
   do {
     // Check USART handle and control_configuration parameter, if NULL return from here
@@ -524,7 +522,7 @@ sl_status_t sl_si91x_usart_set_configuration(sl_usart_handle_t usart_handle,
       break;
     }
     // Check for Max Baud rate supported
-    if (baud_rate > MAX_BAUDRATE) {
+    if (control_configuration->baudrate > MAX_BAUDRATE) {
       status = SL_STATUS_INVALID_PARAMETER;
       break;
     }
@@ -544,7 +542,96 @@ sl_status_t sl_si91x_usart_set_configuration(sl_usart_handle_t usart_handle,
       break;
     }
     // Configure the USART parameters
-    error_status = ((sl_usart_driver_t *)usart_handle)->Control(input_mode, baud_rate);
+    error_status = ((sl_usart_driver_t *)usart_handle)->Control(input_mode, control_configuration->baudrate);
+    status       = convert_arm_to_sl_error_code(error_status);
+  } while (false);
+  return status;
+}
+
+/*******************************************************************************
+ * @brief
+ * To control and configure the USART
+ *
+ * @details
+ * It takes argument of pointer to the structure of control configuration and
+ * baud rate.
+ * It will configure the different configurations such as  USART mode, Data Bits,
+ * Parity , stop bits, flow control ,baud rate,
+ * - USART mode - mode of operation
+ *              - usartAsynchMode
+ *              - usartSynchModeMaster
+ *              - usartSynchModeSlave
+ *              - usartModeSingleWire
+ *              - usartModeIrda
+ * - Data Bits - Set the no of data bits in frame format
+ *             - usartDatabits5
+ *             - usartDatabits6
+ *             - usartDatabits7
+ *             - usartDatabits8
+ *             - usartDatabits9
+ * - Parity   - Set the parity bit
+ *             - usartNoParity
+ *             - usartEvenParity
+ *             - usartOddParity
+ * - Stop bits - Set the stop bits
+ *             - ARM_USART_STOP_BITS_1
+ *             - ARM_USART_STOP_BITS_2
+ *  @note
+ *  ARM_USART_STOP_BITS_0_5 is not supported in driver
+ *  Even we set ARM_USART_STOP_BITS_1_5 driver will consider the
+ *          ARM_USART_STOP_BITS_2
+ *
+ * - Flow control -Set the usart flow control in synchronous mode
+ *                - usartHwFlowControlNone
+ *                - usartHwFlowControlCts
+ *                - usartHwFlowControlRts
+ *                - usartHwFlowControlCtsAndRts
+ * - Baud rate -Set the usart baud rate
+ *
+ * @note
+ * Call the sl_si91x_usart_set_tx_rx_configuration() to set the tx and rx
+ * lines before this API
+ ********************************************************************************/
+sl_status_t sli_si91x_usart_set_non_uc_configuration(sl_usart_handle_t usart_handle,
+                                                     sl_si91x_usart_control_config_t *control_configuration)
+{
+  sl_status_t status;
+  int32_t error_status;
+  uint32_t input_mode = false;
+  /* USART_UC is defined by default. when this macro (USART_UC) is defined, peripheral
+   * configuration is directly taken from the configuration set in the universal configuration (UC).
+   * if the application requires the configuration to be changed in run-time, undefined this macro
+   * and change the peripheral configuration through the sl_si91x_usart_set_configuration API.
+   */
+
+  do {
+    // Check USART handle and control_configuration parameter, if NULL return from here
+    if ((usart_handle == NULL) || (control_configuration == NULL)) {
+      status = SL_STATUS_NULL_POINTER;
+      break;
+    }
+    // Check for Max Baud rate supported
+    if (control_configuration->baudrate > MAX_BAUDRATE) {
+      status = SL_STATUS_INVALID_PARAMETER;
+      break;
+    }
+    // Validate USART handle
+    if (!validate_usart_handle(usart_handle)) {
+      status = SL_STATUS_INVALID_PARAMETER;
+      break;
+    }
+    // Configure the USART Transfer and receive line
+    status = usart_set_tx_rx_configuration(usart_handle);
+    if (status != SL_STATUS_OK) {
+      break;
+    }
+    // Validate the control parameters and combine in single variable
+    status = validate_control_parameters(control_configuration, &input_mode);
+    if (status != SL_STATUS_OK) {
+      break;
+    }
+    // Configure the USART parameters
+    error_status = ((sl_usart_driver_t *)usart_handle)->Control(input_mode, control_configuration->baudrate);
     status       = convert_arm_to_sl_error_code(error_status);
   } while (false);
   return status;
